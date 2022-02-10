@@ -38,7 +38,7 @@ public class Player {
         return balance;
     }
 
-    public void setBalance(double amount) {
+    public void addBalance(int amount) {
         balance += amount;
     }
 

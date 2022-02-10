@@ -1,6 +1,7 @@
 package ui;
 
 import model.BlackjackGame;
+import model.Card;
 
 import java.util.Scanner;
 
@@ -68,8 +69,13 @@ public class BlackjackApp {
         System.out.println("\nYou have a current balance of $" + game.getPlayer().getBalance()
                 + ". Please place a bet.");
         input = new Scanner(System.in);
-        int bet = input.nextInt();
 
+        while (!input.hasNextInt()) {
+            System.out.println("\nThat is an invalid bet. Please try again.");
+            input.nextLine();
+        }
+
+        int bet = input.nextInt();
         while (bet <= 0 || bet > game.getPlayer().getBalance()) {
             System.out.println("\nThat is an invalid bet. Please try again.");
             bet = input.nextInt();
@@ -79,15 +85,15 @@ public class BlackjackApp {
         System.out.println("\nYou have made a bet of $" + game.getPlayer().getBet() + ". Good luck.");
 
         game.startGame();
-        System.out.println("\nYou have " + game.getHandString(game.getPlayerHand()) + ", for a total count of "
-                + game.getHandValue(game.getPlayerHand()) + ".");
+        System.out.println("\nYou have " + game.getHandInString(game.getPlayerHand()) + ", for a total count of "
+                + game.getHandInValue(game.getPlayerHand()) + ".");
         checkBlackjack();
     }
 
     // EFFECTS: checks if dealer or player has a blackjack; otherwise game continues
     private void checkBlackjack() {
         if (game.checkBlackjack(game.getDealerHand()) || game.checkBlackjack(game.getPlayerHand())) {
-            System.out.println("\nDealer shows " + game.getHandString(game.getDealerHand()) + ".");
+            System.out.println("\nDealer shows " + game.getHandInString(game.getDealerHand()) + ".");
             endGame();
         } else {
             System.out.println("Dealer shows " + game.getDealerFirstCard() + ".");
@@ -142,18 +148,19 @@ public class BlackjackApp {
     // EFFECTS: adds card to player's list of cards
     private void playerHit() {
         game.hit(game.getPlayerHand());
+        game.aceValueSwitch(game.getPlayerHand());
 
         if (game.checkBust(game.getPlayerHand())) {
-            System.out.println("\nYou have " + game.getHandString(game.getPlayerHand()) + " for a total count of "
-                    + game.getHandValue(game.getPlayerHand()) + " and have bust.");
+            System.out.println("\nYou have " + game.getHandInString(game.getPlayerHand()) + " for a total count of "
+                    + game.getHandInValue(game.getPlayerHand()) + " and have bust.");
             endGame();
-        } else if (game.getHandValue(game.getPlayerHand()) == 21) {
-            System.out.println("\nYou have " + game.getHandString(game.getPlayerHand()) + " for a total count of "
-                    + game.getHandValue(game.getPlayerHand()) + ". Good hit.");
+        } else if (game.getHandInValue(game.getPlayerHand()) == 21) {
+            System.out.println("\nYou have " + game.getHandInString(game.getPlayerHand()) + " for a total count of "
+                    + game.getHandInValue(game.getPlayerHand()) + ". Good hit.");
             dealerTurn();
         } else {
-            System.out.println("\nYou have " + game.getHandString(game.getPlayerHand()) + " for a total count of "
-                    + game.getHandValue(game.getPlayerHand()) + ". Would you like to hit or stand?");
+            System.out.println("\nYou have " + game.getHandInString(game.getPlayerHand()) + " for a total count of "
+                    + game.getHandInValue(game.getPlayerHand()) + ". Would you like to hit or stand?");
             playerNextAction();
         }
     }
@@ -168,29 +175,32 @@ public class BlackjackApp {
         }
 
         game.hit(game.getPlayerHand());
+        game.aceValueSwitch(game.getPlayerHand());
 
         if (game.checkBust(game.getPlayerHand())) {
-            System.out.println("You have " + game.getHandString(game.getPlayerHand()) + " for a total count of "
-                    + game.getHandValue(game.getPlayerHand()) + " and have bust.");
+            System.out.println("You have " + game.getHandInString(game.getPlayerHand()) + " for a total count of "
+                    + game.getHandInValue(game.getPlayerHand()) + " and have bust.");
             endGame();
         } else {
-            System.out.println("You have " + game.getHandString(game.getPlayerHand()) + " for a total count of "
-                    + game.getHandValue(game.getPlayerHand()) + ".");
+            System.out.println("You have " + game.getHandInString(game.getPlayerHand()) + " for a total count of "
+                    + game.getHandInValue(game.getPlayerHand()) + ".");
             dealerTurn();
         }
     }
 
     // EFFECTS: completes dealer's turn to stand at 17 - 21 or bust
     private void dealerTurn() {
-        System.out.println("\nDealer has " + game.getHandString(game.getDealerHand()) + ", for a total count of "
-                + game.getHandValue(game.getDealerHand()) + ".");
+        System.out.println("\nDealer has " + game.getHandInString(game.getDealerHand()) + ", for a total count of "
+                + game.getHandInValue(game.getDealerHand()) + ".");
 
-        while (game.getHandValue(game.getDealerHand()) < 17) {
+        while (game.getHandInValue(game.getDealerHand()) < 17) {
             game.hit(game.getDealerHand());
-            System.out.println("Dealer hits and gets " + game.getHandString(game.getDealerHand())
-                    + ", for a total count of " + game.getHandValue(game.getDealerHand()) + ".");
+            game.aceValueSwitch(game.getDealerHand());
+            System.out.println("Dealer hits and gets " + game.getHandInString(game.getDealerHand())
+                    + ", for a total count of " + game.getHandInValue(game.getDealerHand()) + ".");
         }
 
+        game.aceValueSwitch(game.getDealerHand());
         if (game.checkBust(game.getDealerHand())) {
             System.out.println("\nDealer busts.");
         }

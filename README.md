@@ -28,10 +28,10 @@ without going over a count of 21.
 - Aces can be either 1 or 11, depending on the situation and whichever is more beneficial for your current hand.
 - Card suits do not affect the game.
 
-### **Vegas Rules:**
+### **Rules:**
 - Blackjack (10 or face card + Ace) pays out 3:2.
 - Dealer stands on a count of 17 to 21.
-- Dealer hits on soft 17.
+- Dealer stands on soft 17.
 
 ### **Rationale for Project:**
 I created this project because I am genuinely fascinated by this game and believe that this is one of the few casino games out there that exercise sound mathematics and logic. There is a well-documented "Basic Strategy" that has been developed over many years based on card probabilities. If a player were to follow closely to this strategy, they could significantly reduce the house edge to 0.5% (vs. ~5% in roulette, for example), making it one of the fairest casino games in existence. 

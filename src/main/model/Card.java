@@ -10,17 +10,17 @@ public class Card {
     public final ArrayList<String> suits =
             new ArrayList<>(Arrays.asList("Clubs", "Diamonds", "Hearts", "Spades"));
     private final int cardRank;
-    private final int cardValue;
+    private int cardValue;
     private final String cardSuit;
 
+    // REQUIRES: rank to be in range of [1,13]
     // EFFECTS: constructs a card with a random rank in range of [1,13], where
     //          1 is an Ace and 11, 12, and 13 are J, Q, K, respectively;
     //          constructor also sets card value based on rank, where
     //          Ace is worth 11 and J, Q, K are each worth 10;
     //          constructor also sets a random card suit in ArrayList<String> suits
-    public Card() {
-        Random randRank = new Random();
-        this.cardRank = randRank.nextInt(13) + 1;
+    public Card(int rank) {
+        this.cardRank = rank;
 
         if (this.cardRank >= 11) {
             this.cardValue = 10;
@@ -29,9 +29,15 @@ public class Card {
         } else {
             this.cardValue = this.cardRank;
         }
+
         Random randSuit = new Random();
         int randIndex = randSuit.nextInt(suits.size());
         this.cardSuit = suits.get(randIndex);
+    }
+
+    // EFFECTS: sets value of card to num
+    public void setAceValue() {
+        cardValue = 1;
     }
 
     // EFFECTS: returns face value of card in range of [1,13]
