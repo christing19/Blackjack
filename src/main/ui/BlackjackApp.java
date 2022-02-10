@@ -148,7 +148,6 @@ public class BlackjackApp {
     // EFFECTS: adds card to player's list of cards
     private void playerHit() {
         game.hit(game.getPlayerHand());
-        game.aceValueSwitch(game.getPlayerHand());
 
         if (game.checkBust(game.getPlayerHand())) {
             System.out.println("\nYou have " + game.getHandInString(game.getPlayerHand()) + " for a total count of "
@@ -175,7 +174,6 @@ public class BlackjackApp {
         }
 
         game.hit(game.getPlayerHand());
-        game.aceValueSwitch(game.getPlayerHand());
 
         if (game.checkBust(game.getPlayerHand())) {
             System.out.println("You have " + game.getHandInString(game.getPlayerHand()) + " for a total count of "
@@ -195,12 +193,10 @@ public class BlackjackApp {
 
         while (game.getHandInValue(game.getDealerHand()) < 17) {
             game.hit(game.getDealerHand());
-            game.aceValueSwitch(game.getDealerHand());
             System.out.println("Dealer hits and gets " + game.getHandInString(game.getDealerHand())
                     + ", for a total count of " + game.getHandInValue(game.getDealerHand()) + ".");
         }
 
-        game.aceValueSwitch(game.getDealerHand());
         if (game.checkBust(game.getDealerHand())) {
             System.out.println("\nDealer busts.");
         }

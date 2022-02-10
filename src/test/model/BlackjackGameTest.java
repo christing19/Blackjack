@@ -19,6 +19,7 @@ class BlackjackGameTest {
 
     @Test
     public void testConstructor() {
+        assertEquals(1000, game.getPlayer().getBalance());
         assertEquals(0, game.getHandInString(game.getPlayerHand()).size());
         assertEquals(0, game.getHandInString(game.getDealerHand()).size());
     }
@@ -43,42 +44,29 @@ class BlackjackGameTest {
     }
 
     @Test
-    public void testGetHandInValue() {
+    public void testGetHandInValueNoAce() {
         ArrayList<Card> hand = new ArrayList<>();
         hand.add(new Card(5));
         hand.add(new Card(11));
         assertEquals(15, game.getHandInValue(hand));
     }
 
-//    @Test
-//    public void testHasAce() {
-//        ArrayList<Card> hand1 = new ArrayList<>();
-//        hand1.add(new Card( 1));
-//        hand1.add(new Card( 5));
-//        assertTrue(game.hasAce(hand1));
-//
-//        ArrayList<Card> hand2 = new ArrayList<>();
-//        hand2.add(new Card( 10));
-//        hand2.add(new Card( 5));
-//        assertFalse(game.hasAce(hand2));
-//    }
+    @Test
+    public void testGetHandInValueWithOneAce() {
+        ArrayList<Card> hand = new ArrayList<>();
+        hand.add(new Card(1));
+        hand.add(new Card(5));
+        assertEquals(16, game.getHandInValue(hand));
+    }
 
-//    @Test
-//    public void testFindAce() {
-//        ArrayList<Card> hand1 = new ArrayList<>();
-//        Card ace = new Card(1);
-//        Card c2 = new Card(2);
-//        hand1.add(ace);
-//        hand1.add(c2);
-//        assertEquals(ace, game.findAce(hand1));
-//
-//        ArrayList<Card> hand2 = new ArrayList<>();
-//        Card c3 = new Card(3);
-//        Card c4 = new Card(4);
-//        hand2.add(c3);
-//        hand2.add(c4);
-//        assertEquals(null, game.findAce(hand2));
-//    }
+    @Test
+    public void testGetHandInValueWithTwoAce() {
+        ArrayList<Card> hand = new ArrayList<>();
+        hand.add(new Card(1));
+        hand.add(new Card(5));
+        hand.add(new Card(1));
+        assertEquals(17, game.getHandInValue(hand));
+    }
 
     @Test
     public void testCheckBlackjack() {
