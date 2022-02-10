@@ -53,11 +53,4 @@ class CardTest {
         assertEquals("Q of " + queenCard.getCardSuit(), queenCard.getCardString());
         assertEquals("K of " + kingCard.getCardSuit(), kingCard.getCardString());
     }
-
-    @Test
-    public void testSetAceValue() {
-        assertEquals(11, aceCard.getCardValue());
-        aceCard.setAceValue();
-        assertEquals(1, aceCard.getCardValue());
-    }
 }

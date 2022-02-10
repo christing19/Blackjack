@@ -38,9 +38,13 @@ without going over a count of 21.
 ### **Rationale for Project:**
 I created this project because I am genuinely fascinated by this game and believe that this is one of the few casino games out there that requires knowledge of probability and logic. There is a well-documented "Basic Strategy" that has been developed over the years based on card probabilities. If a player were to follow closely to this strategy, they could significantly reduce the house edge to 0.5% (vs. ~5% in roulette, for example), making it one of the fairest casino games in existence. 
 
+### **Target Audience:**
+- Anyone who would like to learn about one of the most popular casino card games in the world
+- This is also a good training ground for gameplay before heading out to the casino and gambling with real dollars!
+
 ### **User Stories**
 - As a user, I want to be able to change my bets each round (i.e. bets for each round of play is independent).
-- As a user, I want to be able to make the decision to hit (i.e. draw additional cards) or stand (i.e. do not draw any more cards). 
+- As a user, I want to be able to make the decision to hit (i.e. draw additional cards / adding X to Y) or stand (i.e. do not draw any more cards).
 - As a user, I want to be able to view my balance after the current round is complete.
 - As a user, I want to be able to play a new round after the current round is complete.
 - As a user, I want to be able to double down on my bets on hands where I believe I have a strong chance of beating the dealer.

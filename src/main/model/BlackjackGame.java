@@ -10,7 +10,7 @@ public class BlackjackGame {
     private final ArrayList<Card> dealerHand;
     private final ArrayList<Card> playerHand;
 
-    // EFFECTS: constructs a new round of Blackjack with empty hands (arrays) for dealer and player
+    // EFFECTS: constructs a new round of Blackjack with a player and initializes empty hands for player and dealer
     public BlackjackGame() {
         this.player = new Player();
         this.playerHand = new ArrayList<>();
@@ -34,7 +34,8 @@ public class BlackjackGame {
         dealerHand.add(dealerCard2);
     }
 
-    // EFFECTS: returns the list of cards in the hand (value and suits in string type)
+    // REQUIRES: hand is a non-empty list
+    // EFFECTS: returns the list of cards in the hand with rank and suit in String type
     public ArrayList<String> getHandInString(ArrayList<Card> hand) {
         ArrayList<String> handInString = new ArrayList<>();
         for (Card card : hand) {
@@ -43,7 +44,8 @@ public class BlackjackGame {
         return handInString;
     }
 
-    // EFFECTS: adds the values of all the current cards in the player's hand; accounts for aces and will
+    // REQUIRES: hand is a non-empty list
+    // EFFECTS: adds the values of all the current cards in the hand; accounts for aces and will
     //          deduct 10 from sum (i.e. treating ace as 1) if ace as 11 causes player to go over 21
     public int getHandInValue(ArrayList<Card> hand) {
         int handValue = 0;
@@ -63,26 +65,36 @@ public class BlackjackGame {
         return handValue;
     }
 
-    // EFFECTS: checks if dealer or player has a Blackjack after first cards are handed out
+    // EFFECTS: returns dealer's first card
+    public ArrayList<String> getDealerFirstCardString() {
+        ArrayList<String> dealerFirstCard = new ArrayList<>();
+        dealerFirstCard.add(dealerHand.get(0).getCardString());
+        return dealerFirstCard;
+    }
+
+    // REQUIRES: hand is a non-empty list
+    // EFFECTS: checks if hand has a Blackjack after initial cards are handed out
     public boolean checkBlackjack(ArrayList<Card> hand) {
         return getHandInValue(hand) == 21 && getHandInString(hand).size() == 2;
     }
 
-    // EFFECTS: checks if dealer or player has bust
+    // REQUIRES: hand is a non-empty list
+    // EFFECTS: checks if hand has bust (value > 21)
     public boolean checkBust(ArrayList<Card> hand) {
         return getHandInValue(hand) > 21;
     }
 
+    // REQUIRES: hand is a non-empty list
     // MODIFIES: this
-    // EFFECTS: adds a new card to the current list of cards
+    // EFFECTS: adds a new card to the current hand
     public void hit(ArrayList<Card> hand) {
         Random randRank = new Random();
         Card hitCard = new Card(randRank.nextInt(13) + 1);
         hand.add(hitCard);
     }
 
-    // EFFECTS: compares total value in player's hand vs. dealer's hand,
-    //          returns person with the highest total value without going over 21
+    // EFFECTS: compares total value in player's hand vs. dealer's hand;
+    //          returns result of the round from the player's perspective
     public String determineWinner() {
         if (checkBlackjack(dealerHand) && checkBlackjack(playerHand)) {
             return "Push on this round.";
@@ -103,8 +115,10 @@ public class BlackjackGame {
         }
     }
 
-    // MODIFIES: player
-    // EFFECTS: updates player balance by amount equivalent to bet if player has won a round
+    // MODIFIES: this
+    // EFFECTS: updates player balance based on result of the round;
+    //          if player has won, rewards player by amount equivalent to bet;
+    //          also rewards player with 3:2 of bet if player wins with a Blackjack
     public void updatePlayerBalance() {
         if (determineWinner().equals("You have a Blackjack!")) {
             player.addBalance(player.getBet() * 5 / 2);
@@ -115,39 +129,36 @@ public class BlackjackGame {
         }
     }
 
-    // EFFECTS: adds specific card to player's hand (value and suits)
+    // MODIFIES: this
+    // EFFECTS: clears player's and dealer's hand of existing cards to prepare for new round
+    public void clearHand() {
+        playerHand.clear();
+        dealerHand.clear();
+    }
+
+    // MODIFIES: this
+    // EFFECTS: adds specific card to player's hand
     public void setPlayerCard(Card c) {
         playerHand.add(c);
     }
 
-    // EFFECTS: returns the player's list of cards (value and suits)
+    // EFFECTS: returns player's hand
     public ArrayList<Card> getPlayerHand() {
         return playerHand;
     }
 
-    // EFFECTS: adds specific card to player's hand (value and suits)
+    // MODIFIES: this
+    // EFFECTS: adds specific card to dealer's hand
     public void setDealerCard(Card c) {
         dealerHand.add(c);
     }
 
-    // EFFECTS: returns the dealer's list of cards (value and suits)
+    // EFFECTS: returns dealer's hand
     public ArrayList<Card> getDealerHand() {
         return dealerHand;
     }
 
-    // EFFECTS: returns the dealer's first card (value and suit)
-    public ArrayList<String> getDealerFirstCard() {
-        ArrayList<String> dealerFirstCard = new ArrayList<>();
-        dealerFirstCard.add(dealerHand.get(0).getCardString());
-        return dealerFirstCard;
-    }
-
-    // EFFECTS: clears hand of existing cards
-    public void clearHand(ArrayList<Card> hand) {
-        hand.clear();
-    }
-
-    // EFFECTS: returns player
+    // EFFECTS: returns player; allows access to player fields
     public Player getPlayer() {
         return player;
     }

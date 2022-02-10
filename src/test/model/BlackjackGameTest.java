@@ -1,16 +1,15 @@
 package model;
 
+import java.util.ArrayList;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class BlackjackGameTest {
 
     private BlackjackGame game;
-    private Player player;
 
     @BeforeEach
     public void setUp() {
@@ -20,6 +19,7 @@ class BlackjackGameTest {
     @Test
     public void testConstructor() {
         assertEquals(1000, game.getPlayer().getBalance());
+        assertEquals(0, game.getPlayer().getBet());
         assertEquals(0, game.getHandInString(game.getPlayerHand()).size());
         assertEquals(0, game.getHandInString(game.getDealerHand()).size());
     }
@@ -28,19 +28,22 @@ class BlackjackGameTest {
     public void testStartGame() {
         game.startGame();
         assertEquals(2, game.getHandInString(game.getPlayerHand()).size());
-        assertEquals(2, game.getHandInString(game.getDealerHand()).size());
-    }
+        assertTrue(game.getPlayerHand().get(0).getCardRank() <= 13);
+        assertTrue(game.getPlayerHand().get(0).getCardRank() >= 1);
+        assertTrue(game.getPlayerHand().get(1).getCardRank() <= 13);
+        assertTrue(game.getPlayerHand().get(1).getCardRank() >= 1);
 
-    @Test
-    public void testGetDealerFirstCard() {
-        game.startGame();
-        assertEquals(1, game.getDealerFirstCard().size());
+        assertEquals(2, game.getHandInString(game.getDealerHand()).size());
+        assertTrue(game.getDealerHand().get(0).getCardRank() <= 13);
+        assertTrue(game.getDealerHand().get(0).getCardRank() >= 1);
+        assertTrue(game.getDealerHand().get(1).getCardRank() <= 13);
+        assertTrue(game.getDealerHand().get(1).getCardRank() >= 1);
     }
 
     @Test
     public void testGetHandInString() {
-        assertEquals(game.getDealerHand().size(), game.getHandInString(game.getDealerHand()).size());
         assertEquals(game.getPlayerHand().size(), game.getHandInString(game.getPlayerHand()).size());
+        assertEquals(game.getDealerHand().size(), game.getHandInString(game.getDealerHand()).size());
     }
 
     @Test
@@ -60,20 +63,34 @@ class BlackjackGameTest {
     }
 
     @Test
-    public void testGetHandInValueWithTwoAce() {
+    public void testGetHandInValueWithMultipleAce() {
         ArrayList<Card> hand = new ArrayList<>();
         hand.add(new Card(1));
         hand.add(new Card(5));
         hand.add(new Card(1));
         assertEquals(17, game.getHandInValue(hand));
+
+        hand.add(new Card(1));
+        assertEquals(18, game.getHandInValue(hand));
+    }
+
+    @Test
+    public void testGetDealerFirstCardString() {
+        game.startGame();
+        assertEquals(1, game.getDealerFirstCardString().size());
     }
 
     @Test
     public void testCheckBlackjack() {
-        ArrayList<Card> hand = new ArrayList<>();
-        hand.add(new Card(10));
-        hand.add(new Card( 1));
-        assertTrue(game.checkBlackjack(hand));
+        ArrayList<Card> hand1 = new ArrayList<>();
+        hand1.add(new Card(10));
+        hand1.add(new Card( 1));
+        assertTrue(game.checkBlackjack(hand1));
+
+        ArrayList<Card> hand2 = new ArrayList<>();
+        hand2.add(new Card(2));
+        hand2.add(new Card( 3));
+        assertFalse(game.checkBlackjack(hand2));
     }
 
     @Test
@@ -91,115 +108,135 @@ class BlackjackGameTest {
     public void testHit() {
         ArrayList<Card> hand = new ArrayList<>();
         game.hit(hand);
-        assertEquals(1, game.getHandInString(hand).size());
+        assertEquals(1, hand.size());
+        assertTrue(hand.get(0).getCardRank() <= 13);
+        assertTrue(hand.get(0).getCardRank() >= 1);
 
         game.hit(hand);
-        assertEquals(2, game.getHandInString(hand).size());
+        assertEquals(2, hand.size());
+        assertTrue(hand.get(1).getCardRank() <= 13);
+        assertTrue(hand.get(1).getCardRank() >= 1);
     }
 
     @Test
-    public void testUpdatePlayerBalanceBlackjackPush() {
+    public void testDetermineWinnerUpdatePlayerBalanceBlackjackPush() {
         game.getPlayer().makeBet(100);
         game.setPlayerCard(new Card(1));
         game.setPlayerCard(new Card(10));
+
         game.setDealerCard(new Card(1));
         game.setDealerCard(new Card(10));
+
         game.determineWinner();
         game.updatePlayerBalance();
         assertEquals(1000, game.getPlayer().getBalance());
     }
 
     @Test
-    public void testUpdatePlayerBalanceDealerBlackjack() {
+    public void testDetermineWinnerUpdatePlayerBalanceDealerBlackjack() {
         game.getPlayer().makeBet(100);
         game.setPlayerCard(new Card(2));
         game.setPlayerCard(new Card(3));
+
         game.setDealerCard(new Card(1));
         game.setDealerCard(new Card(10));
+
         game.determineWinner();
         game.updatePlayerBalance();
         assertEquals(900, game.getPlayer().getBalance());
     }
 
     @Test
-    public void testUpdatePlayerBalancePlayerBlackjack() {
+    public void testDetermineWinnerUpdatePlayerBalancePlayerBlackjack() {
         game.getPlayer().makeBet(100);
         game.setPlayerCard(new Card(1));
         game.setPlayerCard(new Card(10));
+
         game.setDealerCard(new Card(2));
         game.setDealerCard(new Card(3));
+
         game.determineWinner();
         game.updatePlayerBalance();
         assertEquals(1150, game.getPlayer().getBalance());
     }
 
     @Test
-    public void testUpdatePlayerBalanceDealerBust() {
+    public void testDetermineWinnerUpdatePlayerBalancePlayerBust() {
         game.getPlayer().makeBet(100);
         game.setPlayerCard(new Card(10));
         game.setPlayerCard(new Card(10));
+
+        game.setDealerCard(new Card(10));
+        game.setDealerCard(new Card(10));
+
+        game.setPlayerCard(new Card(5));
+
+        game.determineWinner();
+        game.updatePlayerBalance();
+        assertEquals(900, game.getPlayer().getBalance());
+    }
+
+    @Test
+    public void testDetermineWinnerUpdatePlayerBalanceDealerBust() {
+        game.getPlayer().makeBet(100);
+        game.setPlayerCard(new Card(10));
+        game.setPlayerCard(new Card(10));
+
         game.setDealerCard(new Card(10));
         game.setDealerCard(new Card(10));
         game.setDealerCard(new Card(5));
+
         game.determineWinner();
         game.updatePlayerBalance();
         assertEquals(1100, game.getPlayer().getBalance());
     }
 
     @Test
-    public void testUpdatePlayerBalancePlayerBust() {
-        game.getPlayer().makeBet(100);
-        game.setPlayerCard(new Card(10));
-        game.setPlayerCard(new Card(10));
-        game.setDealerCard(new Card(10));
-        game.setDealerCard(new Card(10));
-        game.setPlayerCard(new Card(5));
-        game.determineWinner();
-        game.updatePlayerBalance();
-        assertEquals(900, game.getPlayer().getBalance());
-    }
-
-    @Test
-    public void testUpdatePlayerBalanceDealerWin() {
+    public void testDetermineWinnerUpdatePlayerBalanceDealerWin() {
         game.getPlayer().makeBet(100);
         game.setPlayerCard(new Card(2));
         game.setPlayerCard(new Card(3));
+
         game.setDealerCard(new Card(10));
         game.setDealerCard(new Card(10));
+
         game.determineWinner();
         game.updatePlayerBalance();
         assertEquals(900, game.getPlayer().getBalance());
     }
 
     @Test
-    public void testUpdatePlayerBalancePlayerWin() {
+    public void testDetermineWinnerUpdatePlayerBalancePush() {
         game.getPlayer().makeBet(100);
         game.setPlayerCard(new Card(10));
         game.setPlayerCard(new Card(10));
-        game.setDealerCard(new Card(2));
-        game.setDealerCard(new Card(3));
-        game.determineWinner();
-        game.updatePlayerBalance();
-        assertEquals(1100, game.getPlayer().getBalance());
-    }
 
-    @Test
-    public void testUpdatePlayerBalancePush() {
-        game.getPlayer().makeBet(100);
-        game.setPlayerCard(new Card(10));
-        game.setPlayerCard(new Card(10));
         game.setDealerCard(new Card(10));
         game.setDealerCard(new Card(10));
+
         game.determineWinner();
         game.updatePlayerBalance();
         assertEquals(1000, game.getPlayer().getBalance());
     }
 
     @Test
+    public void testDetermineWinnerUpdatePlayerBalancePlayerWin() {
+        game.getPlayer().makeBet(100);
+        game.setPlayerCard(new Card(10));
+        game.setPlayerCard(new Card(10));
+
+        game.setDealerCard(new Card(2));
+        game.setDealerCard(new Card(3));
+
+        game.determineWinner();
+        game.updatePlayerBalance();
+        assertEquals(1100, game.getPlayer().getBalance());
+    }
+
+    @Test
     public void testClearHand() {
-        ArrayList<Card> hand = new ArrayList<>();
-        hand.add(new Card(10));
-        game.clearHand(hand);
-        assertEquals(0, game.getHandInString(hand).size());
+        game.clearHand();
+        assertEquals(0, game.getHandInString(game.getPlayerHand()).size());
+        assertEquals(0, game.getHandInString(game.getDealerHand()).size());
     }
 }

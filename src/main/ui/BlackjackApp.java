@@ -1,7 +1,6 @@
 package ui;
 
 import model.BlackjackGame;
-import model.Card;
 
 import java.util.Scanner;
 
@@ -46,12 +45,11 @@ public class BlackjackApp {
                 System.out.println("\nPlease enter a valid command.");
             }
         }
-
         System.out.println("\nCome again soon!");
     }
 
     // MODIFIES: this
-    // EFFECTS: initializes a new game with a new player
+    // EFFECTS: initializes a new game
     private void initialize() {
         game = new BlackjackGame();
         input = new Scanner(System.in);
@@ -64,7 +62,8 @@ public class BlackjackApp {
         System.out.println("\t- Enter '" + QUIT_CMD + "' to quit the application.");
     }
 
-    // EFFECTS: begins a round of Blackjack by asking for bets and handing out two cards each to dealer and player
+    // MODIFIES: this
+    // EFFECTS: begins a round of Blackjack by asking for player bets and handing out two cards each
     private void playGame() {
         System.out.println("\nYou have a current balance of $" + game.getPlayer().getBalance()
                 + ". Please place a bet.");
@@ -90,18 +89,20 @@ public class BlackjackApp {
         checkBlackjack();
     }
 
-    // EFFECTS: checks if dealer or player has a blackjack; otherwise game continues
+    // MODIFIES: this
+    // EFFECTS: checks if player or dealer has a Blackjack; otherwise game continues
     private void checkBlackjack() {
         if (game.checkBlackjack(game.getDealerHand()) || game.checkBlackjack(game.getPlayerHand())) {
             System.out.println("\nDealer shows " + game.getHandInString(game.getDealerHand()) + ".");
             endGame();
         } else {
-            System.out.println("Dealer shows " + game.getDealerFirstCard() + ".");
+            System.out.println("Dealer shows " + game.getDealerFirstCardString() + ".");
             System.out.println("\nWould you like to hit, stand, or double?");
             playerAction();
         }
     }
 
+    // MODIFIES: this
     // EFFECTS: asks for player input on whether they would like to hit, stand, or double
     private void playerAction() {
         input = new Scanner(System.in);
@@ -125,26 +126,7 @@ public class BlackjackApp {
         }
     }
 
-    // EFFECTS: asks for player input whether they would like to hit a second time or stand
-    private void playerNextAction() {
-        input = new Scanner(System.in);
-        command = input.next();
-        command = command.toLowerCase();
-
-        switch (command) {
-            case "hit":
-                playerHit();
-                break;
-            case "stand":
-                dealerTurn();
-                break;
-            default:
-                System.out.println("\nPlease enter a valid command.");
-                playerNextAction();
-                break;
-        }
-    }
-
+    // MODIFIES: this
     // EFFECTS: adds card to player's list of cards
     private void playerHit() {
         game.hit(game.getPlayerHand());
@@ -164,6 +146,25 @@ public class BlackjackApp {
         }
     }
 
+    // MODIFIES: this
+    // EFFECTS: hits dealer's hand until count is either within range of 17 - 21 or busts
+    private void dealerTurn() {
+        System.out.println("\nDealer has " + game.getHandInString(game.getDealerHand()) + ", for a total count of "
+                + game.getHandInValue(game.getDealerHand()) + ".");
+
+        while (game.getHandInValue(game.getDealerHand()) < 17) {
+            game.hit(game.getDealerHand());
+            System.out.println("Dealer hits and gets " + game.getHandInString(game.getDealerHand())
+                    + ", for a total count of " + game.getHandInValue(game.getDealerHand()) + ".");
+        }
+
+        if (game.checkBust(game.getDealerHand())) {
+            System.out.println("\nDealer busts.");
+        }
+        endGame();
+    }
+
+    // MODIFIES: this
     // EFFECTS: doubles player's original wager and hits hand once, and determines if hand is valid for dealer's turn
     private void playerDouble() {
         if (game.getPlayer().doubleDown()) {
@@ -186,31 +187,34 @@ public class BlackjackApp {
         }
     }
 
-    // EFFECTS: completes dealer's turn to stand at 17 - 21 or bust
-    private void dealerTurn() {
-        System.out.println("\nDealer has " + game.getHandInString(game.getDealerHand()) + ", for a total count of "
-                + game.getHandInValue(game.getDealerHand()) + ".");
+    // MODIFIES: this
+    // EFFECTS: asks for player input whether they would like to hit another time or stand
+    private void playerNextAction() {
+        input = new Scanner(System.in);
+        command = input.next();
+        command = command.toLowerCase();
 
-        while (game.getHandInValue(game.getDealerHand()) < 17) {
-            game.hit(game.getDealerHand());
-            System.out.println("Dealer hits and gets " + game.getHandInString(game.getDealerHand())
-                    + ", for a total count of " + game.getHandInValue(game.getDealerHand()) + ".");
+        switch (command) {
+            case "hit":
+                playerHit();
+                break;
+            case "stand":
+                dealerTurn();
+                break;
+            default:
+                System.out.println("\nPlease enter a valid command.");
+                playerNextAction();
+                break;
         }
-
-        if (game.checkBust(game.getDealerHand())) {
-            System.out.println("\nDealer busts.");
-        }
-        endGame();
     }
 
-    // EFFECTS: determines winner of the round and updates player's balance accordingly. Prompts user to start a new
-    //          game or to quit the application entirely
+    // MODIFIES: this
+    // EFFECTS: determines winner of the round and updates player's balance accordingly; prompts user to start a new
+    //          game or to quit the application
     private void endGame() {
         System.out.println(game.determineWinner());
         game.updatePlayerBalance();
-
-        game.clearHand(game.getPlayerHand());
-        game.clearHand(game.getDealerHand());
+        game.clearHand();
 
         if (game.getPlayer().getBalance() == 0) {
             System.out.println("\nYour new balance is now $0. Please reload the game to replenish your balance.");
