@@ -86,15 +86,17 @@ class BlackjackGameTest {
         hand1.add(new Card(10));
         hand1.add(new Card( 1));
         assertTrue(game.checkBlackjack(hand1));
-        assertEquals(21, game.getHandInValue(hand1));
-        assertEquals(2, hand1.size());
+        assertTrue(game.getHandInValue(hand1) == 21 && game.getHandInString(hand1).size() == 2);
+//        assertEquals(21, game.getHandInValue(hand1));
+//        assertEquals(2, hand1.size());
 
         ArrayList<Card> hand2 = new ArrayList<>();
         hand2.add(new Card(2));
         hand2.add(new Card( 3));
         assertFalse(game.checkBlackjack(hand2));
-        assertEquals(5, game.getHandInValue(hand2));
-        assertEquals(2, hand2.size());
+        assertFalse(game.getHandInValue(hand2) == 21 && game.getHandInString(hand2).size() == 2);
+//        assertEquals(5, game.getHandInValue(hand2));
+//        assertEquals(2, hand2.size());
     }
 
     @Test
