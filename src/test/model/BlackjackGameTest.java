@@ -81,22 +81,45 @@ class BlackjackGameTest {
     }
 
     @Test
-    public void testCheckBlackjack() {
-        ArrayList<Card> hand1 = new ArrayList<>();
-        hand1.add(new Card(10));
-        hand1.add(new Card( 1));
-        assertTrue(game.checkBlackjack(hand1));
-        assertTrue(game.getHandInValue(hand1) == 21 && game.getHandInString(hand1).size() == 2);
-//        assertEquals(21, game.getHandInValue(hand1));
-//        assertEquals(2, hand1.size());
+    public void testCheckBlackjackTrueValueTrueSize() {
+        ArrayList<Card> hand = new ArrayList<>();
+        hand.add(new Card(10));
+        hand.add(new Card( 1));
+        assertTrue(game.checkBlackjack(hand));
+        assertTrue(game.getHandInValue(hand) == 21);
+        assertTrue(game.getHandInString(hand).size() == 2);
+    }
 
-        ArrayList<Card> hand2 = new ArrayList<>();
-        hand2.add(new Card(2));
-        hand2.add(new Card( 3));
-        assertFalse(game.checkBlackjack(hand2));
-        assertFalse(game.getHandInValue(hand2) == 21 && game.getHandInString(hand2).size() == 2);
-//        assertEquals(5, game.getHandInValue(hand2));
-//        assertEquals(2, hand2.size());
+    @Test
+    public void testCheckBlackjackTrueValueFalseSize() {
+        ArrayList<Card> hand = new ArrayList<>();
+        hand.add(new Card(2));
+        hand.add(new Card( 9));
+        hand.add(new Card( 10));
+        assertFalse(game.checkBlackjack(hand));
+        assertTrue(game.getHandInValue(hand) == 21);
+        assertFalse(game.getHandInString(hand).size() == 2);
+    }
+
+    @Test
+    public void testCheckBlackjackFalseValueTrueSize() {
+        ArrayList<Card> hand = new ArrayList<>();
+        hand.add(new Card(2));
+        hand.add(new Card( 3));
+        assertFalse(game.checkBlackjack(hand));
+        assertFalse(game.getHandInValue(hand) == 21);
+        assertTrue(game.getHandInString(hand).size() == 2);
+    }
+
+    @Test
+    public void testCheckBlackjackFalseValueFalseSize() {
+        ArrayList<Card> hand = new ArrayList<>();
+        hand.add(new Card(2));
+        hand.add(new Card( 3));
+        hand.add(new Card( 4));
+        assertFalse(game.checkBlackjack(hand));
+        assertFalse(game.getHandInValue(hand) == 21);
+        assertFalse(game.getHandInString(hand).size() == 2);
     }
 
     @Test
