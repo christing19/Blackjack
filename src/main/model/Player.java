@@ -43,8 +43,18 @@ public class Player {
         return balance;
     }
 
+    // EFFECTS: sets player's current balance to given amount
+    public void setBalance(int amount) {
+        balance = amount;
+    }
+
     // EFFECTS: returns player's bet for the current round
     public int getBet() {
         return bet;
+    }
+
+    // EFFECTS: sets player's current bet to given amount
+    public void setBet(int amount) {
+        bet = amount;
     }
 }

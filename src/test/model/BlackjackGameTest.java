@@ -49,28 +49,28 @@ class BlackjackGameTest {
     @Test
     public void testGetHandInValueNoAce() {
         ArrayList<Card> hand = new ArrayList<>();
-        hand.add(new Card(5));
-        hand.add(new Card(11));
+        hand.add(new Card(5, "spades"));
+        hand.add(new Card(11, "spades"));
         assertEquals(15, game.getHandInValue(hand));
     }
 
     @Test
     public void testGetHandInValueWithOneAce() {
         ArrayList<Card> hand = new ArrayList<>();
-        hand.add(new Card(1));
-        hand.add(new Card(5));
+        hand.add(new Card(1, "spades"));
+        hand.add(new Card(5, "spades"));
         assertEquals(16, game.getHandInValue(hand));
     }
 
     @Test
     public void testGetHandInValueWithMultipleAce() {
         ArrayList<Card> hand = new ArrayList<>();
-        hand.add(new Card(1));
-        hand.add(new Card(5));
-        hand.add(new Card(1));
-        assertEquals(17, game.getHandInValue(hand));
+        hand.add(new Card(1, "spades"));
+        hand.add(new Card(5, "spades"));
+        hand.add(new Card(1, "spades"));
+        assertEquals(1, 7, game.getHandInValue(hand));
 
-        hand.add(new Card(1));
+        hand.add(new Card(1, "spades"));
         assertEquals(18, game.getHandInValue(hand));
     }
 
@@ -83,53 +83,53 @@ class BlackjackGameTest {
     @Test
     public void testCheckBlackjackTrueValueTrueSize() {
         ArrayList<Card> hand = new ArrayList<>();
-        hand.add(new Card(10));
-        hand.add(new Card( 1));
+        hand.add(new Card(10, "spades"));
+        hand.add(new Card( 1, "spades"));
         assertTrue(game.checkBlackjack(hand));
-        assertTrue(game.getHandInValue(hand) == 21);
-        assertTrue(game.getHandInString(hand).size() == 2);
+        assertEquals(21, game.getHandInValue(hand));
+        assertEquals(2, game.getHandInString(hand).size());
     }
 
     @Test
     public void testCheckBlackjackTrueValueFalseSize() {
         ArrayList<Card> hand = new ArrayList<>();
-        hand.add(new Card(2));
-        hand.add(new Card( 9));
-        hand.add(new Card( 10));
+        hand.add(new Card(2, "spades"));
+        hand.add(new Card( 9, "spades"));
+        hand.add(new Card( 10, "spades"));
         assertFalse(game.checkBlackjack(hand));
-        assertTrue(game.getHandInValue(hand) == 21);
-        assertFalse(game.getHandInString(hand).size() == 2);
+        assertEquals(21, game.getHandInValue(hand));
+        assertNotEquals(2, game.getHandInString(hand).size());
     }
 
     @Test
     public void testCheckBlackjackFalseValueTrueSize() {
         ArrayList<Card> hand = new ArrayList<>();
-        hand.add(new Card(2));
-        hand.add(new Card( 3));
+        hand.add(new Card(2, "spades"));
+        hand.add(new Card( 3,"spades"));
         assertFalse(game.checkBlackjack(hand));
-        assertFalse(game.getHandInValue(hand) == 21);
-        assertTrue(game.getHandInString(hand).size() == 2);
+        assertNotEquals(21, game.getHandInValue(hand));
+        assertEquals(2, game.getHandInString(hand).size());
     }
 
     @Test
     public void testCheckBlackjackFalseValueFalseSize() {
         ArrayList<Card> hand = new ArrayList<>();
-        hand.add(new Card(2));
-        hand.add(new Card( 3));
-        hand.add(new Card( 4));
+        hand.add(new Card(2,"spades"));
+        hand.add(new Card( 3,"spades"));
+        hand.add(new Card( 4,"spades"));
         assertFalse(game.checkBlackjack(hand));
-        assertFalse(game.getHandInValue(hand) == 21);
-        assertFalse(game.getHandInString(hand).size() == 2);
+        assertNotEquals(21, game.getHandInValue(hand));
+        assertNotEquals(2, game.getHandInString(hand).size());
     }
 
     @Test
     public void testCheckBust() {
         ArrayList<Card> hand = new ArrayList<>();
-        hand.add(new Card(10));
-        hand.add(new Card( 10));
+        hand.add(new Card(10,"spades"));
+        hand.add(new Card( 10,"spades"));
         assertFalse(game.checkBust(hand));
 
-        hand.add(new Card( 10));
+        hand.add(new Card( 10,"spades"));
         assertTrue(game.checkBust(hand));
     }
 
@@ -150,11 +150,11 @@ class BlackjackGameTest {
     @Test
     public void testDetermineWinnerUpdatePlayerBalanceBlackjackPush() {
         game.getPlayer().makeBet(100);
-        game.setPlayerCard(new Card(1));
-        game.setPlayerCard(new Card(10));
+        game.addCard(game.getPlayerHand(), new Card(1,"spades"));
+        game.addCard(game.getPlayerHand(), new Card(10,"spades"));
 
-        game.setDealerCard(new Card(1));
-        game.setDealerCard(new Card(10));
+        game.addCard(game.getDealerHand(), new Card(1,"spades"));
+        game.addCard(game.getDealerHand(), new Card(10,"spades"));
 
         game.determineWinner();
         game.updatePlayerBalance();
@@ -164,11 +164,11 @@ class BlackjackGameTest {
     @Test
     public void testDetermineWinnerUpdatePlayerBalanceDealerBlackjack() {
         game.getPlayer().makeBet(100);
-        game.setPlayerCard(new Card(2));
-        game.setPlayerCard(new Card(3));
+        game.addCard(game.getPlayerHand(), new Card(2,"spades"));
+        game.addCard(game.getPlayerHand(), new Card(3,"spades"));
 
-        game.setDealerCard(new Card(1));
-        game.setDealerCard(new Card(10));
+        game.addCard(game.getDealerHand(), new Card(1,"spades"));
+        game.addCard(game.getDealerHand(), new Card(10,"spades"));
 
         game.determineWinner();
         game.updatePlayerBalance();
@@ -178,11 +178,11 @@ class BlackjackGameTest {
     @Test
     public void testDetermineWinnerUpdatePlayerBalancePlayerBlackjack() {
         game.getPlayer().makeBet(100);
-        game.setPlayerCard(new Card(1));
-        game.setPlayerCard(new Card(10));
+        game.addCard(game.getPlayerHand(), new Card(1,"spades"));
+        game.addCard(game.getPlayerHand(), new Card(10,"spades"));
 
-        game.setDealerCard(new Card(2));
-        game.setDealerCard(new Card(3));
+        game.addCard(game.getDealerHand(), new Card(2,"spades"));
+        game.addCard(game.getDealerHand(), new Card(3,"spades"));
 
         game.determineWinner();
         game.updatePlayerBalance();
@@ -192,13 +192,13 @@ class BlackjackGameTest {
     @Test
     public void testDetermineWinnerUpdatePlayerBalancePlayerBust() {
         game.getPlayer().makeBet(100);
-        game.setPlayerCard(new Card(10));
-        game.setPlayerCard(new Card(10));
+        game.addCard(game.getPlayerHand(), new Card(10,"spades"));
+        game.addCard(game.getPlayerHand(), new Card(10,"spades"));
 
-        game.setDealerCard(new Card(10));
-        game.setDealerCard(new Card(10));
+        game.addCard(game.getDealerHand(), new Card(10,"spades"));
+        game.addCard(game.getDealerHand(), new Card(10,"spades"));
 
-        game.setPlayerCard(new Card(5));
+        game.addCard(game.getPlayerHand(), new Card(5,"spades"));
 
         game.determineWinner();
         game.updatePlayerBalance();
@@ -208,12 +208,12 @@ class BlackjackGameTest {
     @Test
     public void testDetermineWinnerUpdatePlayerBalanceDealerBust() {
         game.getPlayer().makeBet(100);
-        game.setPlayerCard(new Card(10));
-        game.setPlayerCard(new Card(10));
+        game.addCard(game.getPlayerHand(), new Card(10,"spades"));
+        game.addCard(game.getPlayerHand(), new Card(10,"spades"));
 
-        game.setDealerCard(new Card(10));
-        game.setDealerCard(new Card(10));
-        game.setDealerCard(new Card(5));
+        game.addCard(game.getDealerHand(), new Card(10,"spades"));
+        game.addCard(game.getDealerHand(), new Card(10,"spades"));
+        game.addCard(game.getDealerHand(), new Card(5,"spades"));
 
         game.determineWinner();
         game.updatePlayerBalance();
@@ -223,11 +223,11 @@ class BlackjackGameTest {
     @Test
     public void testDetermineWinnerUpdatePlayerBalanceDealerWin() {
         game.getPlayer().makeBet(100);
-        game.setPlayerCard(new Card(2));
-        game.setPlayerCard(new Card(3));
+        game.addCard(game.getPlayerHand(), new Card(2,"spades"));
+        game.addCard(game.getPlayerHand(), new Card(3,"spades"));
 
-        game.setDealerCard(new Card(10));
-        game.setDealerCard(new Card(10));
+        game.addCard(game.getDealerHand(), new Card(10,"spades"));
+        game.addCard(game.getDealerHand(), new Card(10,"spades"));
 
         game.determineWinner();
         game.updatePlayerBalance();
@@ -237,11 +237,11 @@ class BlackjackGameTest {
     @Test
     public void testDetermineWinnerUpdatePlayerBalancePush() {
         game.getPlayer().makeBet(100);
-        game.setPlayerCard(new Card(10));
-        game.setPlayerCard(new Card(10));
+        game.addCard(game.getPlayerHand(), new Card(10,"spades"));
+        game.addCard(game.getPlayerHand(), new Card(10,"spades"));
 
-        game.setDealerCard(new Card(10));
-        game.setDealerCard(new Card(10));
+        game.addCard(game.getDealerHand(), new Card(10,"spades"));
+        game.addCard(game.getDealerHand(), new Card(10,"spades"));
 
         game.determineWinner();
         game.updatePlayerBalance();
@@ -251,11 +251,11 @@ class BlackjackGameTest {
     @Test
     public void testDetermineWinnerUpdatePlayerBalancePlayerWin() {
         game.getPlayer().makeBet(100);
-        game.setPlayerCard(new Card(10));
-        game.setPlayerCard(new Card(10));
+        game.addCard(game.getPlayerHand(), new Card(10,"spades"));
+        game.addCard(game.getPlayerHand(), new Card(10,"spades"));
 
-        game.setDealerCard(new Card(2));
-        game.setDealerCard(new Card(3));
+        game.addCard(game.getDealerHand(), new Card(2,"spades"));
+        game.addCard(game.getDealerHand(), new Card(3,"spades"));
 
         game.determineWinner();
         game.updatePlayerBalance();

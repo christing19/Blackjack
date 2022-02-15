@@ -15,34 +15,34 @@ class CardTest {
 
     @BeforeEach
     public void setUp() {
-        aceCard = new Card(1);
-        normalCard = new Card(2);
-        jackCard = new Card(11);
-        queenCard = new Card(12);
-        kingCard = new Card(13);
+        aceCard = new Card(1, "clubs");
+        normalCard = new Card(2, "diamonds");
+        jackCard = new Card(11, "hearts");
+        queenCard = new Card(12, "spades");
+        kingCard = new Card(13, "clubs");
     }
 
     @Test
     public void testConstructor() {
         assertEquals(1, aceCard.getCardRank());
         assertEquals(11, aceCard.getCardValue());
-        assertTrue(aceCard.suits.contains(aceCard.getCardSuit()));
+        assertEquals("clubs", aceCard.getCardSuit());
 
         assertEquals(2, normalCard.getCardRank());
         assertEquals(2, normalCard.getCardValue());
-        assertTrue(normalCard.suits.contains(normalCard.getCardSuit()));
+        assertEquals("diamonds", normalCard.getCardSuit());
 
         assertEquals(11, jackCard.getCardRank());
         assertEquals(10, jackCard.getCardValue());
-        assertTrue(jackCard.suits.contains(jackCard.getCardSuit()));
+        assertEquals("hearts", jackCard.getCardSuit());
 
         assertEquals(12, queenCard.getCardRank());
         assertEquals(10, queenCard.getCardValue());
-        assertTrue(queenCard.suits.contains(queenCard.getCardSuit()));
+        assertEquals("spades", queenCard.getCardSuit());
 
         assertEquals(13, kingCard.getCardRank());
         assertEquals(10, kingCard.getCardValue());
-        assertTrue(kingCard.suits.contains(kingCard.getCardSuit()));
+        assertEquals("clubs", kingCard.getCardSuit());
     }
 
     @Test

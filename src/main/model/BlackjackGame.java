@@ -1,11 +1,17 @@
 package model;
 
+import org.json.JSONObject;
+import persistence.Writable;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 
 // Represents a game of Blackjack
-public class BlackjackGame {
+public class BlackjackGame implements Writable {
 
+    public final ArrayList<String> suits =
+            new ArrayList<>(Arrays.asList("Clubs", "Diamonds", "Hearts", "Spades"));
     private final Player player;
     private final ArrayList<Card> dealerHand;
     private final ArrayList<Card> playerHand;
@@ -22,14 +28,16 @@ public class BlackjackGame {
     //          to their respective hands
     public void startGame() {
         Random randRank = new Random();
+        Random randSuit = new Random();
+        int randIndex = randSuit.nextInt(suits.size());
 
-        Card playerCard1 = new Card(randRank.nextInt(13) + 1);
-        Card playerCard2 = new Card(randRank.nextInt(13) + 1);
+        Card playerCard1 = new Card(randRank.nextInt(13) + 1, suits.get(randIndex));
+        Card playerCard2 = new Card(randRank.nextInt(13) + 1, suits.get(randIndex));
         playerHand.add(playerCard1);
         playerHand.add(playerCard2);
 
-        Card dealerCard1 = new Card(randRank.nextInt(13) + 1);
-        Card dealerCard2 = new Card(randRank.nextInt(13) + 1);
+        Card dealerCard1 = new Card(randRank.nextInt(13) + 1, suits.get(randIndex));
+        Card dealerCard2 = new Card(randRank.nextInt(13) + 1, suits.get(randIndex));
         dealerHand.add(dealerCard1);
         dealerHand.add(dealerCard2);
     }
@@ -89,7 +97,10 @@ public class BlackjackGame {
     // EFFECTS: adds a new card to the current hand
     public void hit(ArrayList<Card> hand) {
         Random randRank = new Random();
-        Card hitCard = new Card(randRank.nextInt(13) + 1);
+        Random randSuit = new Random();
+        int randIndex = randSuit.nextInt(suits.size());
+
+        Card hitCard = new Card(randRank.nextInt(13) + 1, suits.get(randIndex));
         hand.add(hitCard);
     }
 
@@ -138,19 +149,13 @@ public class BlackjackGame {
 
     // MODIFIES: this
     // EFFECTS: adds specific card to player's hand
-    public void setPlayerCard(Card c) {
-        playerHand.add(c);
+    public void addCard(ArrayList<Card> hand, Card c) {
+        hand.add(c);
     }
 
     // EFFECTS: returns player's hand
     public ArrayList<Card> getPlayerHand() {
         return playerHand;
-    }
-
-    // MODIFIES: this
-    // EFFECTS: adds specific card to dealer's hand
-    public void setDealerCard(Card c) {
-        dealerHand.add(c);
     }
 
     // EFFECTS: returns dealer's hand
@@ -161,5 +166,15 @@ public class BlackjackGame {
     // EFFECTS: returns player; allows access to player fields
     public Player getPlayer() {
         return player;
+    }
+
+    @Override
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("Player Balance", player.getBalance());
+        json.put("Player Bet", player.getBet());
+        json.put("Player Hand", playerHand);
+        json.put("Dealer Hand", dealerHand);
+        return json;
     }
 }

@@ -1,16 +1,29 @@
 package ui;
 
 import model.BlackjackGame;
+import persistence.JsonReader;
+import persistence.JsonWriter;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Scanner;
 
 // Represents a Blackjack game application
 public class BlackjackApp {
 
+    private static final String JSON_STORE = "./data/BlackjackGame.json";
     private static final String PLAY_CMD = "play";
     private static final String QUIT_CMD = "quit";
+    private static final String LOAD_CMD = "load";
+    private static final String SAVE_CMD = "save";
+    private static final String HIT_CMD = "hit";
+    private static final String STAND_CMD = "stand";
+    private static final String DOUBLE_CMD = "double";
+
 
     private BlackjackGame game;
+    private JsonWriter jsonWriter;
+    private JsonReader jsonReader;
 
     private boolean newGame;
     private Scanner input;
@@ -18,6 +31,8 @@ public class BlackjackApp {
 
     // EFFECTS: runs the Blackjack application
     public BlackjackApp() {
+        jsonWriter = new JsonWriter(JSON_STORE);
+        jsonReader = new JsonReader(JSON_STORE);
         runBlackjack();
     }
 
@@ -37,12 +52,23 @@ public class BlackjackApp {
             command = input.next();
             command = command.toLowerCase();
 
-            if (command.equals(QUIT_CMD)) {
-                newGame = false;
-            } else if (command.equals(PLAY_CMD)) {
-                playGame();
-            } else {
-                System.out.println("\nPlease enter a valid command.");
+            switch (command) {
+                case QUIT_CMD:
+                    newGame = false;
+                    break;
+                case PLAY_CMD:
+                    playGame();
+                    printCards();
+                    break;
+                case LOAD_CMD:
+                    loadBlackjackGame();
+                    break;
+                case SAVE_CMD:
+                    saveBlackjackGame();
+                    break;
+                default:
+                    System.out.println("\nPlease enter a valid command.");
+                    break;
             }
         }
         System.out.println("\nCome again soon!");
@@ -59,6 +85,7 @@ public class BlackjackApp {
     private void homeScreen() {
         System.out.println("\nPlease select one of the following options:");
         System.out.println("\t- Enter '" + PLAY_CMD + "' to start a new game.");
+        System.out.println("\t- Enter '" + LOAD_CMD + "' to load a previously saved game.");
         System.out.println("\t- Enter '" + QUIT_CMD + "' to quit the application.");
     }
 
@@ -82,8 +109,11 @@ public class BlackjackApp {
 
         game.getPlayer().makeBet(bet);
         System.out.println("\nYou have made a bet of $" + game.getPlayer().getBet() + ". Good luck.");
-
         game.startGame();
+    }
+
+    // EFFECTS: prints out cards in player's hand
+    private void printCards() {
         System.out.println("\nYou have " + game.getHandInString(game.getPlayerHand()) + ", for a total count of "
                 + game.getHandInValue(game.getPlayerHand()) + ".");
         checkBlackjack();
@@ -97,7 +127,11 @@ public class BlackjackApp {
             endGame();
         } else {
             System.out.println("Dealer shows " + game.getDealerFirstCardString() + ".");
-            System.out.println("\nWould you like to hit, stand, or double?");
+            System.out.println("\nWould you like to:");
+            System.out.println("\t- '" + HIT_CMD + "' to take another card.");
+            System.out.println("\t- '" + STAND_CMD + "' to complete your turn.");
+            System.out.println("\t- '" + DOUBLE_CMD + "' to double your wager and take another card.");
+            System.out.println("\t- '" + SAVE_CMD + "' to save your progress in the round and quit the application.");
             playerAction();
         }
     }
@@ -110,14 +144,17 @@ public class BlackjackApp {
         command = command.toLowerCase();
 
         switch (command) {
-            case "hit":
+            case HIT_CMD:
                 playerHit();
                 break;
-            case "stand":
+            case STAND_CMD:
                 dealerTurn();
                 break;
-            case "double":
+            case DOUBLE_CMD:
                 playerDouble();
+                break;
+            case SAVE_CMD:
+                saveBlackjackGame();
                 break;
             default:
                 System.out.println("\nPlease enter a valid command.");
@@ -141,7 +178,11 @@ public class BlackjackApp {
             dealerTurn();
         } else {
             System.out.println("\nYou have " + game.getHandInString(game.getPlayerHand()) + " for a total count of "
-                    + game.getHandInValue(game.getPlayerHand()) + ". Would you like to hit or stand?");
+                    + game.getHandInValue(game.getPlayerHand()) + ".");
+            System.out.println("\nWould you like to:");
+            System.out.println("\t- '" + HIT_CMD + "' to take another card.");
+            System.out.println("\t- '" + STAND_CMD + "' to complete your turn.");
+            System.out.println("\t- '" + SAVE_CMD + "' to save your progress in the round and quit the application.");
             playerNextAction();
         }
     }
@@ -195,17 +236,52 @@ public class BlackjackApp {
         command = command.toLowerCase();
 
         switch (command) {
-            case "hit":
+            case HIT_CMD:
                 playerHit();
                 break;
-            case "stand":
+            case STAND_CMD:
                 dealerTurn();
+                break;
+            case SAVE_CMD:
+                saveBlackjackGame();
                 break;
             default:
                 System.out.println("\nPlease enter a valid command.");
                 playerNextAction();
                 break;
         }
+    }
+
+    // EFFECTS: saves the current round of Blackjack to file
+    private void saveBlackjackGame() {
+        try {
+            jsonWriter.open();
+            jsonWriter.write(game);
+            jsonWriter.close();
+            System.out.println("Saved game to " + JSON_STORE);
+        } catch (FileNotFoundException e) {
+            System.out.println("Unable to write to file: " + JSON_STORE);
+        }
+        newGame = false;
+    }
+
+    // MODIFIES: this
+    // EFFECTS: loads the saved round of Blackjack from file
+    private void loadBlackjackGame() {
+        try {
+            game = jsonReader.read();
+            System.out.println("Loaded game from " + JSON_STORE);
+        } catch (IOException e) {
+            System.out.println("Unable to read to file: " + JSON_STORE);
+        }
+
+        if (game.getPlayerHand().isEmpty()) {
+            playGame();
+        } else {
+            System.out.println("\nYour current balance is $" + game.getPlayer().getBalance() + " and your current bet"
+                    + " for this round is $" + game.getPlayer().getBet() + ".");
+        }
+        printCards();
     }
 
     // MODIFIES: this
@@ -215,6 +291,7 @@ public class BlackjackApp {
         System.out.println(game.determineWinner());
         game.updatePlayerBalance();
         game.clearHand();
+        game.getPlayer().setBet(0);
 
         if (game.getPlayer().getBalance() == 0) {
             System.out.println("\nYour new balance is now $0. Please reload the game to replenish your balance.");
@@ -223,6 +300,7 @@ public class BlackjackApp {
             System.out.println("\nYour new balance is $" + game.getPlayer().getBalance()
                     + ". Would you like to play again?");
             homeScreen();
+            System.out.println("\t- Enter '" + SAVE_CMD + "' to save your progress and quit the application.");
         }
     }
 }

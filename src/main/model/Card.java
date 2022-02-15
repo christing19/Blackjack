@@ -2,24 +2,21 @@ package model;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Random;
 
 // Represents a card in the game of Blackjack
 public class Card {
 
-    public final ArrayList<String> suits =
-            new ArrayList<>(Arrays.asList("Clubs", "Diamonds", "Hearts", "Spades"));
     private final int cardRank;
     private final int cardValue;
     private final String cardSuit;
 
-    // REQUIRES: card rank is in range of [1,13]
+    // REQUIRES: card rank is in range of [1,13]; card suit is one of: "Clubs", "Diamonds", "Hearts", "Spades"
     // EFFECTS: constructs a card with a rank (i.e. face value) in range of [1,13], where
     //          1 is an Ace, 11, 12, and 13 are J, Q, K, respectively;
     //          constructor also sets card value based on rank, where
     //          Ace is worth 11 and J, Q, K are each worth 10;
-    //          finally, constructor also sets a random card suit from "suits"
-    public Card(int rank) {
+    //          finally, constructor also sets card suit based on suit
+    public Card(int rank, String suit) {
         // card rank component
         this.cardRank = rank;
 
@@ -33,9 +30,7 @@ public class Card {
         }
 
         // card suit component
-        Random randSuit = new Random();
-        int randIndex = randSuit.nextInt(suits.size());
-        this.cardSuit = suits.get(randIndex);
+        this.cardSuit = suit;
     }
 
     // EFFECTS: returns card rank and card suit in String type
