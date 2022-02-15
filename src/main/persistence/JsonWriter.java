@@ -5,6 +5,8 @@ import org.json.JSONObject;
 
 import java.io.*;
 
+// Sections of this class are adapted from:
+// https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo
 // Represents a writer that writes JSON representation of BlackjackGame to file
 public class JsonWriter {
     private static final int TAB = 4;
@@ -24,7 +26,7 @@ public class JsonWriter {
     }
 
     // MODIFIES: this
-    // EFFECTS: writes JSON representation of workroom to file
+    // EFFECTS: writes JSON representation of BlackjackGame to file
     public void write(BlackjackGame game) {
         JSONObject json = game.toJson();
         saveToFile(json.toString(TAB));

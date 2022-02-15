@@ -168,6 +168,8 @@ public class BlackjackGame implements Writable {
         return player;
     }
 
+    // Sections of this method are adapted from:
+    // https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo
     @Override
     public JSONObject toJson() {
         JSONObject json = new JSONObject();

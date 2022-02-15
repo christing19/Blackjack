@@ -1,8 +1,5 @@
 package model;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-
 // Represents a card in the game of Blackjack
 public class Card {
 

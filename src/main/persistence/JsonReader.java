@@ -12,6 +12,8 @@ import java.util.stream.Stream;
 import model.Card;
 import org.json.*;
 
+// Sections of this class are adapted from:
+// https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo
 // Represents a reader that reads BlackjackGame from JSON data stored in file
 public class JsonReader {
     private String source;
