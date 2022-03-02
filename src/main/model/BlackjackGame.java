@@ -170,6 +170,7 @@ public class BlackjackGame implements Writable {
 
     // Sections of this method are adapted from:
     // https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo
+    // EFFECTS: adds player's balance, bet, hand and dealer's hand into JSONObject
     @Override
     public JSONObject toJson() {
         JSONObject json = new JSONObject();
