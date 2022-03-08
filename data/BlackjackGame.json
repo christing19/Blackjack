@@ -1,6 +1,32 @@
 {
-    "Player Bet": 0,
-    "Player Balance": 1500,
-    "Player Hand": [],
-    "Dealer Hand": []
+    "Player Bet": 50,
+    "Player Balance": 1850,
+    "Player Hand": [
+        {
+            "cardString": "4 of Hearts",
+            "cardSuit": "Hearts",
+            "cardValue": 4,
+            "cardRank": 4
+        },
+        {
+            "cardString": "2 of Hearts",
+            "cardSuit": "Hearts",
+            "cardValue": 2,
+            "cardRank": 2
+        }
+    ],
+    "Dealer Hand": [
+        {
+            "cardString": "9 of Hearts",
+            "cardSuit": "Hearts",
+            "cardValue": 9,
+            "cardRank": 9
+        },
+        {
+            "cardString": "2 of Hearts",
+            "cardSuit": "Hearts",
+            "cardValue": 2,
+            "cardRank": 2
+        }
+    ]
 }

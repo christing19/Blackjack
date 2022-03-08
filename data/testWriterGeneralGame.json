@@ -4,28 +4,28 @@
     "Player Hand": [
         {
             "cardString": "A of spades",
-            "cardValue": 11,
             "cardSuit": "spades",
+            "cardValue": 11,
             "cardRank": 1
         },
         {
             "cardString": "10 of spades",
-            "cardValue": 10,
             "cardSuit": "spades",
+            "cardValue": 10,
             "cardRank": 10
         }
     ],
     "Dealer Hand": [
         {
             "cardString": "2 of spades",
-            "cardValue": 2,
             "cardSuit": "spades",
+            "cardValue": 2,
             "cardRank": 2
         },
         {
             "cardString": "3 of spades",
-            "cardValue": 3,
             "cardSuit": "spades",
+            "cardValue": 3,
             "cardRank": 3
         }
     ]
