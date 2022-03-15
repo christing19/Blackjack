@@ -3,7 +3,7 @@ package ui;
 import javax.swing.*;
 import java.awt.*;
 
-public class ImagePanel extends JComponent {
+public class ImagePanel extends JPanel {
 
     private Image image;
 

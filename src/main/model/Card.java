@@ -66,5 +66,19 @@ public class Card {
     public String getCardSuit() {
         return cardSuit;
     }
+
+    public int getCardSuitNum() {
+        switch (cardSuit) {
+            case "Clubs":
+                return 1;
+            case "Diamonds":
+                return 2;
+            case "Hearts":
+                return 3;
+            case "Spades":
+                return 4;
+        }
+        return 0;
+    }
 }
 

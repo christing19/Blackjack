@@ -1,32 +1,32 @@
 {
-    "Player Bet": 50,
-    "Player Balance": 1850,
+    "Player Bet": 5,
+    "Player Balance": 995,
     "Player Hand": [
         {
-            "cardString": "4 of Hearts",
-            "cardSuit": "Hearts",
-            "cardValue": 4,
-            "cardRank": 4
+            "cardString": "J of Diamonds",
+            "cardValue": 10,
+            "cardSuit": "Diamonds",
+            "cardRank": 11
         },
         {
-            "cardString": "2 of Hearts",
-            "cardSuit": "Hearts",
+            "cardString": "2 of Diamonds",
             "cardValue": 2,
+            "cardSuit": "Diamonds",
             "cardRank": 2
         }
     ],
     "Dealer Hand": [
         {
-            "cardString": "9 of Hearts",
-            "cardSuit": "Hearts",
-            "cardValue": 9,
-            "cardRank": 9
+            "cardString": "5 of Diamonds",
+            "cardValue": 5,
+            "cardSuit": "Diamonds",
+            "cardRank": 5
         },
         {
-            "cardString": "2 of Hearts",
-            "cardSuit": "Hearts",
-            "cardValue": 2,
-            "cardRank": 2
+            "cardString": "4 of Diamonds",
+            "cardValue": 4,
+            "cardSuit": "Diamonds",
+            "cardRank": 4
         }
     ]
 }

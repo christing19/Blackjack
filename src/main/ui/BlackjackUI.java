@@ -4,62 +4,88 @@ import model.BlackjackGame;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-class BlackjackUI extends JFrame {
+class BlackjackUI extends JFrame implements ActionListener {
 
     public static final int WIDTH = 800;
     public static final int HEIGHT = 600;
+
     private BlackjackGame game;
     private JFrame mainFrame;
     private ImagePanel image;
-    private JLabel message;
+    private JButton playBtn;
+    private JButton loadBtn;
+    private JButton quitBtn;
 
     // EFFECTS: sets up window in which Blackjack game will be played
     public BlackjackUI() {
-        this.game = new BlackjackGame();
-        this.image = new ImagePanel(new ImageIcon("./images/menuBackground.jpg").getImage());
+        game = new BlackjackGame();
+        image = new ImagePanel(new ImageIcon("./images/menuBackground.jpg").getImage());
 
         mainFrame = new JFrame("Blackjack Game Simulator");
+        mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainFrame.add(image);
+        image.setLayout(null);
+
         welcomeMessage();
-        addButtons();
+        initializeButtonPanel();
 
         mainFrame.setSize(WIDTH, HEIGHT);
         mainFrame.setLocationRelativeTo(null);
-        mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainFrame.setResizable(false);
         mainFrame.setVisible(true);
         centreOnScreen();
     }
 
     public void welcomeMessage() {
-        JLabel message = new JLabel("Welcome to Blackjack!");
-        message.setBounds(80, 100, 500, 100);
+        JLabel message = new JLabel("Welcome to Blackjack!", JLabel.LEFT);
+        message.setFont(new Font("Avenir", Font.BOLD, 40));
+        message.setForeground(Color.WHITE);
+        message.setBounds(50, 50, WIDTH, 100);
+
+        JLabel message2 = new JLabel("To begin, please select one of the following options:", JLabel.LEFT);
+        message2.setFont(new Font("Avenir", Font.BOLD, 20));
+        message2.setForeground(Color.WHITE);
+        message2.setBounds(50, 100, 500, 250);
+
         image.add(message);
+        image.add(message2);
     }
 
-    public void addButtons() {
-        JButton playBtn = new JButton("Play");
-        JButton loadBtn = new JButton("Load");
-        JButton quitBtn = new JButton("Quit");
+    public void initializeButtonPanel() {
+        playBtn = new JButton("Play");
+        loadBtn = new JButton("Load");
+        quitBtn = new JButton("Quit");
 
-        playBtn.setBounds(80,250,100,50);
-        loadBtn.setBounds(80,325,100,50);
-        quitBtn.setBounds(80,400,100,50);
+        for (JButton button : new JButton[]{playBtn, loadBtn, quitBtn}) {
+            button.setFont(new Font("Avenir", Font.BOLD, 20));
+            button.addActionListener(this);
+        }
 
-        playBtn.setFont(new Font("Avenir", Font.BOLD, 25));
-        loadBtn.setFont(new Font("Avenir", Font.BOLD, 25));
-        quitBtn.setFont(new Font("Avenir", Font.BOLD, 25));
-
+        playBtn.setBounds(50, 250, 100, 50);
+        loadBtn.setBounds(50, 300, 100, 50);
+        quitBtn.setBounds(50, 350, 100, 50);
         image.add(playBtn);
         image.add(loadBtn);
         image.add(quitBtn);
     }
 
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == playBtn) {
+            new GameUI(game);
+            mainFrame.setVisible(false);
+        } else if (e.getSource() == quitBtn) {
+            System.exit(0);
+        }
+    }
+
     // Centres frame on desktop
     // MODIFIES: this
     // EFFECTS:  location of frame is set so frame is centred on desktop
-    private void centreOnScreen() {
+    public void centreOnScreen() {
         int width = Toolkit.getDefaultToolkit().getScreenSize().width;
         int height = Toolkit.getDefaultToolkit().getScreenSize().height;
         setLocation((width - getWidth()) / 2, (height - getHeight()) / 2);
