@@ -2,6 +2,7 @@ package model;
 
 import java.util.ArrayList;
 
+import exceptions.IllegalBetException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -149,7 +150,11 @@ class BlackjackGameTest {
 
     @Test
     public void testDetermineWinnerUpdatePlayerBalanceBlackjackPush() {
-        game.getPlayer().makeBet(100);
+        try {
+            game.getPlayer().makeBet(100);
+        } catch (IllegalBetException e) {
+            fail("Exception should not have been thrown");
+        }
         game.addCard(game.getPlayerHand(), new Card(1,"spades"));
         game.addCard(game.getPlayerHand(), new Card(10,"spades"));
 
@@ -163,7 +168,11 @@ class BlackjackGameTest {
 
     @Test
     public void testDetermineWinnerUpdatePlayerBalanceDealerBlackjack() {
-        game.getPlayer().makeBet(100);
+        try {
+            game.getPlayer().makeBet(100);
+        } catch (IllegalBetException e) {
+            fail("Exception should not have been thrown");
+        }
         game.addCard(game.getPlayerHand(), new Card(2,"spades"));
         game.addCard(game.getPlayerHand(), new Card(3,"spades"));
 
@@ -177,7 +186,11 @@ class BlackjackGameTest {
 
     @Test
     public void testDetermineWinnerUpdatePlayerBalancePlayerBlackjack() {
-        game.getPlayer().makeBet(100);
+        try {
+            game.getPlayer().makeBet(100);
+        } catch (IllegalBetException e) {
+            fail("Exception should not have been thrown");
+        }
         game.addCard(game.getPlayerHand(), new Card(1,"spades"));
         game.addCard(game.getPlayerHand(), new Card(10,"spades"));
 
@@ -191,7 +204,11 @@ class BlackjackGameTest {
 
     @Test
     public void testDetermineWinnerUpdatePlayerBalancePlayerBust() {
-        game.getPlayer().makeBet(100);
+        try {
+            game.getPlayer().makeBet(100);
+        } catch (IllegalBetException e) {
+            fail("Exception should not have been thrown");
+        }
         game.addCard(game.getPlayerHand(), new Card(10,"spades"));
         game.addCard(game.getPlayerHand(), new Card(10,"spades"));
 
@@ -207,7 +224,11 @@ class BlackjackGameTest {
 
     @Test
     public void testDetermineWinnerUpdatePlayerBalanceDealerBust() {
-        game.getPlayer().makeBet(100);
+        try {
+            game.getPlayer().makeBet(100);
+        } catch (IllegalBetException e) {
+            fail("Exception should not have been thrown");
+        }
         game.addCard(game.getPlayerHand(), new Card(10,"spades"));
         game.addCard(game.getPlayerHand(), new Card(10,"spades"));
 
@@ -222,7 +243,11 @@ class BlackjackGameTest {
 
     @Test
     public void testDetermineWinnerUpdatePlayerBalanceDealerWin() {
-        game.getPlayer().makeBet(100);
+        try {
+            game.getPlayer().makeBet(100);
+        } catch (IllegalBetException e) {
+            fail("Exception should not have been thrown");
+        }
         game.addCard(game.getPlayerHand(), new Card(2,"spades"));
         game.addCard(game.getPlayerHand(), new Card(3,"spades"));
 
@@ -236,7 +261,11 @@ class BlackjackGameTest {
 
     @Test
     public void testDetermineWinnerUpdatePlayerBalancePush() {
-        game.getPlayer().makeBet(100);
+        try {
+            game.getPlayer().makeBet(100);
+        } catch (IllegalBetException e) {
+            fail("Exception should not have been thrown");
+        }
         game.addCard(game.getPlayerHand(), new Card(10,"spades"));
         game.addCard(game.getPlayerHand(), new Card(10,"spades"));
 
@@ -250,7 +279,11 @@ class BlackjackGameTest {
 
     @Test
     public void testDetermineWinnerUpdatePlayerBalancePlayerWin() {
-        game.getPlayer().makeBet(100);
+        try {
+            game.getPlayer().makeBet(100);
+        } catch (IllegalBetException e) {
+            fail("Exception should not have been thrown");
+        }
         game.addCard(game.getPlayerHand(), new Card(10,"spades"));
         game.addCard(game.getPlayerHand(), new Card(10,"spades"));
 

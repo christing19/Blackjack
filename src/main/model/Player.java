@@ -1,5 +1,7 @@
 package model;
 
+import exceptions.IllegalBetException;
+
 // Represents a player in a game of Blackjack
 public class Player {
 
@@ -15,7 +17,11 @@ public class Player {
     // REQUIRES: 0 < amount <= balance
     // MODIFIES: this
     // EFFECTS: applies given amount as current bet for current round of play
-    public void makeBet(int amount) {
+    public void makeBet(int amount) throws IllegalBetException {
+        if (amount < 0 || amount > balance) {
+            throw new IllegalBetException();
+        }
+
         bet = amount;
         balance -= bet;
     }

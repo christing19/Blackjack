@@ -33,6 +33,8 @@ public class BlackjackGame implements Writable {
 
         Card playerCard1 = new Card(randRank.nextInt(13) + 1, suits.get(randIndex));
         Card playerCard2 = new Card(randRank.nextInt(13) + 1, suits.get(randIndex));
+//        Card playerCard1 = new Card(1, suits.get(randIndex));
+//        Card playerCard2 = new Card(11, suits.get(randIndex));
         playerHand.add(playerCard1);
         playerHand.add(playerCard2);
 

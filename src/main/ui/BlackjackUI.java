@@ -76,8 +76,9 @@ class BlackjackUI extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == playBtn) {
             new GameUI(game);
-            mainFrame.setVisible(false);
+            mainFrame.dispose();
         } else if (e.getSource() == quitBtn) {
+            JOptionPane.showMessageDialog(mainFrame, "See you next time!");
             System.exit(0);
         }
     }

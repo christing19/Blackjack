@@ -1,5 +1,6 @@
 package ui;
 
+import exceptions.IllegalBetException;
 import model.BlackjackGame;
 import persistence.JsonReader;
 import persistence.JsonWriter;
@@ -101,7 +102,11 @@ public class BlackjackApp {
             bet = input.nextInt();
         }
 
-        game.getPlayer().makeBet(bet);
+        try {
+            game.getPlayer().makeBet(bet);
+        } catch (IllegalBetException e) {
+            //
+        }
         System.out.println("\nYou have made a bet of $" + game.getPlayer().getBet() + ". Good luck.");
         game.startGame();
     }

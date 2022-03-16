@@ -1,5 +1,6 @@
 package persistence;
 
+import exceptions.IllegalBetException;
 import model.BlackjackGame;
 import model.Card;
 import org.junit.jupiter.api.Test;
@@ -47,7 +48,13 @@ class JsonWriterTest {
     void testWriterGeneralGame() {
         try {
             BlackjackGame game = new BlackjackGame();
-            game.getPlayer().makeBet(100);
+
+            try {
+                game.getPlayer().makeBet(100);
+            } catch (IllegalBetException e) {
+                fail("Exception should not have been thrown");
+            }
+
             game.addCard(game.getPlayerHand(), new Card(1,"spades"));
             game.addCard(game.getPlayerHand(), new Card(10,"spades"));
             game.addCard(game.getDealerHand(), new Card(2,"spades"));
