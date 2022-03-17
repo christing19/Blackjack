@@ -3,33 +3,33 @@
     "Player Balance": 900,
     "Player Hand": [
         {
-            "cardSuitNum": 0,
-            "cardString": "A of spades",
+            "cardSuitNum": 4,
+            "cardString": "A of Spades",
             "cardValue": 11,
-            "cardSuit": "spades",
+            "cardSuit": "Spades",
             "cardRank": 1
         },
         {
-            "cardSuitNum": 0,
-            "cardString": "10 of spades",
+            "cardSuitNum": 4,
+            "cardString": "10 of Spades",
             "cardValue": 10,
-            "cardSuit": "spades",
+            "cardSuit": "Spades",
             "cardRank": 10
         }
     ],
     "Dealer Hand": [
         {
-            "cardSuitNum": 0,
-            "cardString": "2 of spades",
+            "cardSuitNum": 4,
+            "cardString": "2 of Spades",
             "cardValue": 2,
-            "cardSuit": "spades",
+            "cardSuit": "Spades",
             "cardRank": 2
         },
         {
-            "cardSuitNum": 0,
-            "cardString": "3 of spades",
+            "cardSuitNum": 4,
+            "cardString": "3 of Spades",
             "cardValue": 3,
-            "cardSuit": "spades",
+            "cardSuit": "Spades",
             "cardRank": 3
         }
     ]

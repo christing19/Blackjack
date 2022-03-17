@@ -1,32 +1,6 @@
 {
-    "Player Bet": 5,
-    "Player Balance": 995,
-    "Player Hand": [
-        {
-            "cardString": "J of Diamonds",
-            "cardValue": 10,
-            "cardSuit": "Diamonds",
-            "cardRank": 11
-        },
-        {
-            "cardString": "2 of Diamonds",
-            "cardValue": 2,
-            "cardSuit": "Diamonds",
-            "cardRank": 2
-        }
-    ],
-    "Dealer Hand": [
-        {
-            "cardString": "5 of Diamonds",
-            "cardValue": 5,
-            "cardSuit": "Diamonds",
-            "cardRank": 5
-        },
-        {
-            "cardString": "4 of Diamonds",
-            "cardValue": 4,
-            "cardSuit": "Diamonds",
-            "cardRank": 4
-        }
-    ]
+    "Player Bet": 0,
+    "Player Balance": 1188,
+    "Player Hand": [],
+    "Dealer Hand": []
 }

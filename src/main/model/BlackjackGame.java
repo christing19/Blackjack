@@ -33,6 +33,8 @@ public class BlackjackGame implements Writable {
 
         Card playerCard1 = new Card(randRank.nextInt(13) + 1, suits.get(randIndex));
         Card playerCard2 = new Card(randRank.nextInt(13) + 1, suits.get(randIndex));
+
+//        to test Blackjack cases
 //        Card playerCard1 = new Card(1, suits.get(randIndex));
 //        Card playerCard2 = new Card(11, suits.get(randIndex));
         playerHand.add(playerCard1);
@@ -176,8 +178,8 @@ public class BlackjackGame implements Writable {
     @Override
     public JSONObject toJson() {
         JSONObject json = new JSONObject();
-        json.put("Player Balance", player.getBalance());
         json.put("Player Bet", player.getBet());
+        json.put("Player Balance", player.getBalance());
         json.put("Player Hand", playerHand);
         json.put("Dealer Hand", dealerHand);
         return json;

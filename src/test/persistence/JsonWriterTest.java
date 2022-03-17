@@ -55,10 +55,10 @@ class JsonWriterTest {
                 fail("Exception should not have been thrown");
             }
 
-            game.addCard(game.getPlayerHand(), new Card(1,"spades"));
-            game.addCard(game.getPlayerHand(), new Card(10,"spades"));
-            game.addCard(game.getDealerHand(), new Card(2,"spades"));
-            game.addCard(game.getDealerHand(), new Card(3,"spades"));
+            game.addCard(game.getPlayerHand(), new Card(1,"Spades"));
+            game.addCard(game.getPlayerHand(), new Card(10,"Spades"));
+            game.addCard(game.getDealerHand(), new Card(2,"Spades"));
+            game.addCard(game.getDealerHand(), new Card(3,"Spades"));
 
             JsonWriter writer = new JsonWriter("./data/testWriterGeneralGame.json");
             writer.open();

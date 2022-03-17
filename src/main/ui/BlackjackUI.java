@@ -1,18 +1,23 @@
 package ui;
 
 import model.BlackjackGame;
+import persistence.JsonReader;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 class BlackjackUI extends JFrame implements ActionListener {
 
     public static final int WIDTH = 800;
     public static final int HEIGHT = 600;
+    public static final String JSON_LOCATION = "./data/BlackjackGame.json";
 
     private BlackjackGame game;
+    private JsonReader jsonReader;
+
     private JFrame mainFrame;
     private ImagePanel image;
     private JButton playBtn;
@@ -22,6 +27,8 @@ class BlackjackUI extends JFrame implements ActionListener {
     // EFFECTS: sets up window in which Blackjack game will be played
     public BlackjackUI() {
         game = new BlackjackGame();
+        jsonReader = new JsonReader(JSON_LOCATION);
+
         image = new ImagePanel(new ImageIcon("./images/menuBackground.jpg").getImage());
 
         mainFrame = new JFrame("Blackjack Game Simulator");
@@ -48,7 +55,7 @@ class BlackjackUI extends JFrame implements ActionListener {
         JLabel message2 = new JLabel("To begin, please select one of the following options:", JLabel.LEFT);
         message2.setFont(new Font("Avenir", Font.BOLD, 20));
         message2.setForeground(Color.WHITE);
-        message2.setBounds(50, 100, 500, 250);
+        message2.setBounds(50, 70, 500, 250);
 
         image.add(message);
         image.add(message2);
@@ -61,23 +68,36 @@ class BlackjackUI extends JFrame implements ActionListener {
 
         for (JButton button : new JButton[]{playBtn, loadBtn, quitBtn}) {
             button.setFont(new Font("Avenir", Font.BOLD, 20));
+            button.setForeground(Color.WHITE);
             button.addActionListener(this);
         }
 
-        playBtn.setBounds(50, 250, 100, 50);
-        loadBtn.setBounds(50, 300, 100, 50);
-        quitBtn.setBounds(50, 350, 100, 50);
+        playBtn.setBounds(50, 225, 100, 50);
+        loadBtn.setBounds(50, 275, 100, 50);
+        quitBtn.setBounds(50, 325, 100, 50);
         image.add(playBtn);
         image.add(loadBtn);
         image.add(quitBtn);
     }
 
+    public void loadBlackjackGame() {
+        try {
+            game = jsonReader.read();
+            mainFrame.dispose();
+            new GameUI(game);
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(mainFrame, "Unable to read file: " + JSON_LOCATION);
+        }
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == playBtn) {
-            new GameUI(game);
             mainFrame.dispose();
-        } else if (e.getSource() == quitBtn) {
+            new GameUI(game);
+        } else if (e.getSource() == loadBtn) {
+            loadBlackjackGame();
+        } else {
             JOptionPane.showMessageDialog(mainFrame, "See you next time!");
             System.exit(0);
         }

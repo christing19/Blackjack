@@ -3,6 +3,7 @@ package ui;
 import exceptions.IllegalBetException;
 import model.BlackjackGame;
 import model.Card;
+import persistence.JsonWriter;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -11,6 +12,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.NumberFormat;
 
@@ -37,30 +39,49 @@ public class GameUI extends JFrame implements ActionListener {
 
     private JPanel actionPanel;
     private JPanel infoPanel;
-    private JDialog againPrompt;
+    private JsonWriter jsonWriter;
 
     public GameUI(BlackjackGame game) {
         this.game = game;
-        game.startGame();
+        jsonWriter = new JsonWriter(BlackjackUI.JSON_LOCATION);
+
         gameFrame = new JFrame("Blackjack Game Simulator");
         image = new ImagePanel(new ImageIcon("./images/gameBackground.jpg").getImage());
-
         image.setLayout(new GridBagLayout());
         gc = new GridBagConstraints();
 
-        initializeBetPopOut();
-
         gameFrame.add(image);
         gameFrame.setVisible(true);
-        initializeDealerPanel();
-        initializePlayerPanel();
-        initializeActionPanel();
-        initializeInfoPanel();
-
         gameFrame.setSize(BlackjackUI.WIDTH, BlackjackUI.HEIGHT);
         gameFrame.setLocationRelativeTo(null);
         gameFrame.setResizable(false);
         gameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        initializeGameUI();
+    }
+
+    public void initializeGameUI() {
+        if (game.getPlayerHand().isEmpty()) {
+            game.startGame();
+            initializeBetPopOut();
+        } else {
+            JOptionPane.showMessageDialog(gameFrame, "Successfully loaded previously saved game. \n"
+                    + "Your balance is $" + NumberFormat.getIntegerInstance().format(game.getPlayer().getBalance())
+                    + " and your current bet for this round is $"
+                    + NumberFormat.getIntegerInstance().format(game.getPlayer().getBet()) + ".");
+        }
+
+        initializeDealerPanel();
+        initializePlayerPanel();
+        initializeActionPanel();
+
+        if (game.getPlayerHand().size() > 2) {
+            doubleBtn.setVisible(false);
+        }
+
+        initializeInfoPanel();
+        image.revalidate();
+        image.repaint();
     }
 
     public void initializeBetPopOut() {
@@ -69,7 +90,8 @@ public class GameUI extends JFrame implements ActionListener {
         do {
             try {
                 bet = Integer.parseInt(JOptionPane.showInputDialog(gameFrame,
-                        "Please make a bet.\nYour balance is: $" + game.getPlayer().getBalance(),
+                        "Please make a bet.\nYour balance is: $"
+                                + NumberFormat.getIntegerInstance().format(game.getPlayer().getBalance()),
                         "Time to make a bet!", JOptionPane.QUESTION_MESSAGE));
                 game.getPlayer().makeBet(bet);
             } catch (NumberFormatException | IllegalBetException e) {
@@ -195,8 +217,7 @@ public class GameUI extends JFrame implements ActionListener {
         } else if (e.getSource() == doubleBtn) {
             playerDouble();
         } else if (e.getSource() == saveBtn) {
-            JOptionPane.showMessageDialog(gameFrame, "Your saved balance is $"
-                    + NumberFormat.getIntegerInstance().format(game.getPlayer().getBalance()));
+            saveGame();
             System.exit(0);
         }
     }
@@ -226,12 +247,13 @@ public class GameUI extends JFrame implements ActionListener {
                     + game.determineWinner());
             endGame();
         } else if (game.getHandInValue(game.getPlayerHand()) > 21) {
-            JOptionPane.showMessageDialog(gameFrame, "You have a total count of "
+            JOptionPane.showMessageDialog(gameFrame, "You hit a "
+                    + game.getPlayerHand().get(last).getCardString() + " for a total count of "
                     + game.getHandInValue(game.getPlayerHand()) + " and have bust.\n" + game.determineWinner());
             endGame();
         } else {
             JOptionPane.showMessageDialog(gameFrame, "You hit a "
-                    + game.getPlayerHand().get(last).getCardValue() + " for a total count of "
+                    + game.getPlayerHand().get(last).getCardString() + " for a total count of "
                     + game.getHandInValue(game.getPlayerHand()) + ".");
         }
     }
@@ -288,7 +310,8 @@ public class GameUI extends JFrame implements ActionListener {
 
     public void playerDouble() {
         if (game.getPlayer().doubleDown()) {
-            JOptionPane.showMessageDialog(gameFrame, "Your bet is now $" + game.getPlayer().getBet() + ".");
+            JOptionPane.showMessageDialog(gameFrame, "Your bet is now $" + game.getPlayer().getBet()
+                    + ". Good luck!");
             game.hit(game.getPlayerHand());
             playerPanel.add(new JLabel(new ImageIcon(printCard(game.getPlayerHand().get(2)))));
             gc.gridx = 0;
@@ -313,17 +336,23 @@ public class GameUI extends JFrame implements ActionListener {
         }
     }
 
+    public void saveGame() {
+        try {
+            jsonWriter.open();
+            jsonWriter.write(game);
+            jsonWriter.close();
+            JOptionPane.showMessageDialog(gameFrame, "Successfully saved game. Your balance is $"
+                    + NumberFormat.getIntegerInstance().format(game.getPlayer().getBalance()) + ".\n"
+                    + "Thanks for playing!");
+        } catch (FileNotFoundException e) {
+            JOptionPane.showMessageDialog(gameFrame, "Unable to write to file: " + BlackjackUI.JSON_LOCATION);
+        }
+    }
+
     public void endGame() {
         game.updatePlayerBalance();
         game.clearHand();
         game.getPlayer().setBet(0);
-
-        dealerPanel.setVisible(false);
-        playerPanel.setVisible(false);
-        dealerText.setVisible(false);
-        playerText.setVisible(false);
-        actionPanel.setVisible(false);
-        infoPanel.setVisible(false);
 
         if (game.getPlayer().getBalance() <= 0) {
             JOptionPane.showMessageDialog(gameFrame, "Your balance is now $0. \n"
@@ -339,21 +368,27 @@ public class GameUI extends JFrame implements ActionListener {
         String [] options = {"Save & Quit", "No", "Yes"};
         int selected;
 
+        ImageIcon chips = new ImageIcon("./images/bettingChips.png");
+
         do {
             selected = JOptionPane.showOptionDialog(gameFrame,
-                    "Would you like to play again? Please select one of the following:", "Play Again?",
-                    JOptionPane.DEFAULT_OPTION,JOptionPane.QUESTION_MESSAGE, null, options, options[2]);
+                    "Your new balance is $"
+                            + NumberFormat.getIntegerInstance().format(game.getPlayer().getBalance())
+                            + ".\nWould you like to play again? \nPlease select one of the following:",
+                    "Play Again?", JOptionPane.DEFAULT_OPTION,JOptionPane.QUESTION_MESSAGE, chips,
+                    options, options[2]);
         } while (selected == JOptionPane.CLOSED_OPTION);
 
         switch (selected) {
             case 2:
-                new GameUI(game);
                 gameFrame.dispose();
+                new GameUI(game);
                 break;
             case 1:
                 JOptionPane.showMessageDialog(gameFrame, "Thanks for playing, see you next time!");
                 System.exit(0);
             case 0:
+                saveGame();
                 System.exit(0);
         }
     }
