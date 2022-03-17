@@ -14,9 +14,9 @@ public class Player {
         this.bet = 0;
     }
 
-    // REQUIRES: 0 < amount <= balance
     // MODIFIES: this
     // EFFECTS: applies given amount as current bet for current round of play
+    //          throws IllegalBetException if given amount is < 0 or > current balance
     public void makeBet(int amount) throws IllegalBetException {
         if (amount < 0 || amount > balance) {
             throw new IllegalBetException();

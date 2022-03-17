@@ -16,6 +16,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.NumberFormat;
 
+// Represents the main window in which the Blacjack game is played
 public class GameUI extends JFrame implements ActionListener {
 
     private BlackjackGame game;
@@ -41,6 +42,10 @@ public class GameUI extends JFrame implements ActionListener {
     private JPanel infoPanel;
     private JsonWriter jsonWriter;
 
+    // Sections of this method are adapted from:
+    // https://github.students.cs.ubc.ca/CPSC210/AlarmSystem
+    // gameBackground image taken from: https://stock.adobe.com/sk/search/images?k=blackjack+table&asset_id=93364974
+    // EFFECTS: sets up window in which the Blackjack game will be played
     public GameUI(BlackjackGame game) {
         this.game = game;
         jsonWriter = new JsonWriter(BlackjackUI.JSON_LOCATION);
@@ -60,6 +65,8 @@ public class GameUI extends JFrame implements ActionListener {
         initializeGameUI();
     }
 
+    // MODIFIES: this
+    // EFFECTS: initializes various game panels, including dealer / player hands and action / info panels
     public void initializeGameUI() {
         if (game.getPlayerHand().isEmpty()) {
             game.startGame();
@@ -84,6 +91,9 @@ public class GameUI extends JFrame implements ActionListener {
         image.repaint();
     }
 
+    // MODIFIES: Player
+    // EFFECTS: takes user input for bet and sets player bet to given input;
+    //          prompts user to re-enter bet input if NumberFormatException or IllegalBetException is caught
     public void initializeBetPopOut() {
         int bet;
 
@@ -102,6 +112,9 @@ public class GameUI extends JFrame implements ActionListener {
         } while (bet == 0);
     }
 
+    // backOfCard image taken from: https://www.nicepng.com/maxp/u2w7e6w7a9q8t4q8/
+    // MODIFIES: this
+    // EFFECTS: displays dealer's current count as well as a visual of dealer's hand with one card face-down
     public void initializeDealerPanel() {
         dealerText = new JLabel("Dealer shows a count of "
                 + game.getDealerHand().get(0).getCardValue() + ".",SwingConstants.CENTER);
@@ -127,6 +140,8 @@ public class GameUI extends JFrame implements ActionListener {
         image.add(dealerPanel, gc);
     }
 
+    // MODIFIES: this
+    // EFFECTS: displays player's current count as well as a visual of player's hand
     public void initializePlayerPanel() {
         playerPanel = new JPanel();
         playerPanel.setLayout(new FlowLayout());
@@ -155,6 +170,8 @@ public class GameUI extends JFrame implements ActionListener {
         image.add(playerText, gc);
     }
 
+    // MODIFIES: this
+    // EFFECTS: displays action panel with 4 buttons available for user to decide on next move
     public void initializeActionPanel() {
         actionPanel = new JPanel();
         hitBtn = new JButton("Hit");
@@ -175,6 +192,8 @@ public class GameUI extends JFrame implements ActionListener {
         image.add(actionPanel, gc);
     }
 
+    // MODIFIES: this
+    // EFFECTS: displays current balance and bet information for this round
     public void initializeInfoPanel() {
         infoPanel = new JPanel();
         infoPanel.setOpaque(false);
@@ -192,6 +211,8 @@ public class GameUI extends JFrame implements ActionListener {
         image.add(infoPanel, gc);
     }
 
+    // listOfCards image taken from: https://www.nicepng.com/maxp/u2w7e6w7a9q8t4q8/
+    // EFFECTS: reads listOfCards.jpg and returns a sub-image based on a card input using the card's suit and rank
     public BufferedImage printCard(Card c) {
         BufferedImage allCards = null;
         try {
@@ -209,6 +230,12 @@ public class GameUI extends JFrame implements ActionListener {
     }
 
     @Override
+    // MODIFIES: this
+    // EFFECTS: completes actions based on button pressed on action panel
+    //          "Hit" adds card to player's hand
+    //          "Stand" ends player's turn and moves to dealer's turn
+    //          "Double" doubles the player's current bet and takes a single card
+    //          "Save & Quit" saves the current game, closes the game menu and exits the program
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == hitBtn) {
             playerHit();
@@ -222,6 +249,8 @@ public class GameUI extends JFrame implements ActionListener {
         }
     }
 
+    // MODIFIES: this, BlackjackGame
+    // EFFECTS: adds a card to player's hand and displays it onto the game window
     public void playerHit() {
         game.hit(game.getPlayerHand());
 
@@ -239,6 +268,7 @@ public class GameUI extends JFrame implements ActionListener {
         playerDialog();
     }
 
+    // EFFECTS: displays a pop-out dialog that summarizes the result of the player's hit
     public void playerDialog() {
         int last = game.getPlayerHand().size() - 1;
 
@@ -258,6 +288,8 @@ public class GameUI extends JFrame implements ActionListener {
         }
     }
 
+    // MODIFIES: this
+    // EFFECTS: reveals dealer's face-down card onto the game window
     public void dealerTurn() {
         faceDownCard.setVisible(false);
         dealerPanel.add(new JLabel(new ImageIcon(printCard(game.getDealerHand().get(1)))));
@@ -271,6 +303,8 @@ public class GameUI extends JFrame implements ActionListener {
         dealerHit();
     }
 
+    // MODIFIES: this, BlackjackGame
+    // EFFECTS: adds cards to dealer's hand until dealer reaches at least 17 and displays them onto the game window
     public void dealerHit() {
         int counter = 0;
         while (game.getHandInValue(game.getDealerHand()) < 17) {
@@ -291,6 +325,8 @@ public class GameUI extends JFrame implements ActionListener {
         dealerDialog(counter);
     }
 
+    // EFFECTS: displays a pop-out dialog that summarizes the result of the dealer's hit(s) as well as the result
+    //          of the round
     public void dealerDialog(int timesHit) {
         if (timesHit == 0) {
             JOptionPane.showMessageDialog(gameFrame, "Dealer stands with a total count of "
@@ -308,6 +344,8 @@ public class GameUI extends JFrame implements ActionListener {
         endGame();
     }
 
+    // MODIFIES: this, Player, BlackjackGame
+    // EFFECTS: double's the player's current bet, adds one card to player's hand and displays it onto the game window
     public void playerDouble() {
         if (game.getPlayer().doubleDown()) {
             JOptionPane.showMessageDialog(gameFrame, "Your bet is now $" + game.getPlayer().getBet()
@@ -336,6 +374,9 @@ public class GameUI extends JFrame implements ActionListener {
         }
     }
 
+    // Sections of this method are adapted from:
+    // https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo
+    // EFFECTS: saves the current round of Blackjack to file
     public void saveGame() {
         try {
             jsonWriter.open();
@@ -349,6 +390,8 @@ public class GameUI extends JFrame implements ActionListener {
         }
     }
 
+    // MODIFIES: BlackjackGame, Player
+    // EFFECTS: updates player's balance accordingly, clears both player and dealer's hands
     public void endGame() {
         game.updatePlayerBalance();
         game.clearHand();
@@ -364,6 +407,12 @@ public class GameUI extends JFrame implements ActionListener {
         }
     }
 
+    // bettingChips image taken from: https://shutr.bz/3qdojxs
+    // MODIFIES: this
+    // EFFECTS: prompts user to select from 3 options:
+    //          "Yes" starts a new round of Blackjack;
+    //          "No" closes the application;
+    //          "Save & Quit" saves the current balance to file and then closes the application
     public void playAgain() {
         String [] options = {"Save & Quit", "No", "Yes"};
         int selected;

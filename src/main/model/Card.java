@@ -67,6 +67,8 @@ public class Card {
         return cardSuit;
     }
 
+    // EFFECTS: returns suit of card as a pre-assigned integer value;
+    //          Clubs = 1, Diamonds = 2, Hearts = 3, Spades = 4;
     public int getCardSuitNum() {
         switch (cardSuit) {
             case "Clubs":

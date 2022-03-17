@@ -9,7 +9,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 
-class BlackjackUI extends JFrame implements ActionListener {
+// Represents the main menu of options for when the program is initially ran
+public class BlackjackUI extends JFrame implements ActionListener {
 
     public static final int WIDTH = 800;
     public static final int HEIGHT = 600;
@@ -24,7 +25,10 @@ class BlackjackUI extends JFrame implements ActionListener {
     private JButton loadBtn;
     private JButton quitBtn;
 
-    // EFFECTS: sets up window in which Blackjack game will be played
+    // Sections of this method are adapted from:
+    // https://github.students.cs.ubc.ca/CPSC210/AlarmSystem
+    // menuBackground image taken from: https://bit.ly/3MRa8rD
+    // EFFECTS: sets up window in which the background image and menu options will be displayed
     public BlackjackUI() {
         game = new BlackjackGame();
         jsonReader = new JsonReader(JSON_LOCATION);
@@ -46,6 +50,8 @@ class BlackjackUI extends JFrame implements ActionListener {
         centreOnScreen();
     }
 
+    // MODIFIES: this
+    // EFFECTS: adds a welcome message to the main menu, and provides instructions on how to proceed
     public void welcomeMessage() {
         JLabel message = new JLabel("Welcome to Blackjack!", JLabel.LEFT);
         message.setFont(new Font("Avenir", Font.BOLD, 40));
@@ -61,6 +67,9 @@ class BlackjackUI extends JFrame implements ActionListener {
         image.add(message2);
     }
 
+
+    // MODIFIES: this
+    // EFFECTS: adds the "Play", "Load", and "Quit" buttons onto the main menu
     public void initializeButtonPanel() {
         playBtn = new JButton("Play");
         loadBtn = new JButton("Load");
@@ -80,6 +89,10 @@ class BlackjackUI extends JFrame implements ActionListener {
         image.add(quitBtn);
     }
 
+    // Sections of this method are adapted from:
+    // https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo
+    // MODIFIES: this
+    // EFFECTS: loads the saved round of Blackjack from file into a game window and disposes of the main menu
     public void loadBlackjackGame() {
         try {
             game = jsonReader.read();
@@ -91,6 +104,11 @@ class BlackjackUI extends JFrame implements ActionListener {
     }
 
     @Override
+    // MODIFIES: this
+    // EFFECTS: completes actions based on button pressed on main menu:
+    //          "Play" loads a new game into a GameUI and disposes of the main menu
+    //          "Load" calls the loadBlackjackGame() method
+    //          "Quit" closes the main menu and exits the program
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == playBtn) {
             mainFrame.dispose();
@@ -103,7 +121,8 @@ class BlackjackUI extends JFrame implements ActionListener {
         }
     }
 
-    // Centres frame on desktop
+    // Sections of this method are adapted from:
+    // https://github.students.cs.ubc.ca/CPSC210/B02-SpaceInvadersBase
     // MODIFIES: this
     // EFFECTS:  location of frame is set so frame is centred on desktop
     public void centreOnScreen() {
@@ -112,7 +131,7 @@ class BlackjackUI extends JFrame implements ActionListener {
         setLocation((width - getWidth()) / 2, (height - getHeight()) / 2);
     }
 
-    // starts the application
+    // EFFECTS: starts a new main menu and runs the application
     public static void main(String[] args) {
         new BlackjackUI();
     }
