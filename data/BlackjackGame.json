@@ -1,6 +1,36 @@
 {
-    "Player Bet": 0,
-    "Player Balance": 1188,
-    "Player Hand": [],
-    "Dealer Hand": []
+    "Player Bet": 7,
+    "Player Balance": 1000,
+    "Player Hand": [
+        {
+            "cardSuitNum": 1,
+            "cardString": "A of Clubs",
+            "cardSuit": "Clubs",
+            "cardValue": 11,
+            "cardRank": 1
+        },
+        {
+            "cardSuitNum": 1,
+            "cardString": "J of Clubs",
+            "cardSuit": "Clubs",
+            "cardValue": 10,
+            "cardRank": 11
+        }
+    ],
+    "Dealer Hand": [
+        {
+            "cardSuitNum": 1,
+            "cardString": "A of Clubs",
+            "cardSuit": "Clubs",
+            "cardValue": 11,
+            "cardRank": 1
+        },
+        {
+            "cardSuitNum": 1,
+            "cardString": "A of Clubs",
+            "cardSuit": "Clubs",
+            "cardValue": 11,
+            "cardRank": 1
+        }
+    ]
 }

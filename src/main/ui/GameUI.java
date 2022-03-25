@@ -7,6 +7,9 @@ import persistence.JsonWriter;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -28,13 +31,18 @@ public class GameUI extends JFrame implements ActionListener {
     private JButton hitBtn;
     private JButton standBtn;
     private JButton doubleBtn;
+    private JButton yesBtn;
+    private JButton noBtn;
     private JButton saveBtn;
+    private JButton continueBtn;
 
     private JPanel dealerPanel;
     private JPanel playerPanel;
 
     private JLabel dealerText;
-    private JLabel playerText;
+    private JTextPane playerText;
+    private JTextPane againText;
+
     private JLabel balanceMsg;
     private JLabel betMsg;
 
@@ -72,8 +80,8 @@ public class GameUI extends JFrame implements ActionListener {
             game.startGame();
             initializeBetPopOut();
         } else {
-            JOptionPane.showMessageDialog(gameFrame, "Successfully loaded previously saved game. \n"
-                    + "Your balance is $" + NumberFormat.getIntegerInstance().format(game.getPlayer().getBalance())
+            JOptionPane.showMessageDialog(gameFrame, "Your balance is $"
+                    + NumberFormat.getIntegerInstance().format(game.getPlayer().getBalance())
                     + " and your current bet for this round is $"
                     + NumberFormat.getIntegerInstance().format(game.getPlayer().getBet()) + ".");
         }
@@ -82,6 +90,7 @@ public class GameUI extends JFrame implements ActionListener {
         initializePlayerPanel();
         initializeActionPanel();
 
+        playerBlackjack();
         if (game.getPlayerHand().size() > 2) {
             doubleBtn.setVisible(false);
         }
@@ -154,16 +163,16 @@ public class GameUI extends JFrame implements ActionListener {
         gc.gridy = 2;
         image.add(playerPanel, gc);
 
-        playerText = new JLabel("", SwingConstants.CENTER);
-        if (game.checkBlackjack(game.getPlayerHand())) {
-            playerText.setText(game.determineWinner());
-            endGame();
-        } else {
-            playerText.setText("You have a current count of " + game.getHandInValue(game.getPlayerHand())
-                    + ". What would you like to do?");
-        }
+        playerText = new JTextPane();
         playerText.setFont(new Font("Avenir", Font.BOLD, 20));
+        playerText.setOpaque(false);
+        playerText.setEditable(false);
         playerText.setForeground(Color.WHITE);
+        StyledDocument doc = playerText.getStyledDocument();
+        SimpleAttributeSet center = new SimpleAttributeSet();
+        StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER);
+        doc.setParagraphAttributes(0, doc.getLength(), center, false);
+
         gc.weightx = 0.5;
         gc.gridx = 0;
         gc.gridy = 3;
@@ -171,24 +180,33 @@ public class GameUI extends JFrame implements ActionListener {
     }
 
     // MODIFIES: this
-    // EFFECTS: displays action panel with 4 buttons available for user to decide on next move
+    // EFFECTS: displays action panel with buttons available for user to decide on next move
     public void initializeActionPanel() {
         actionPanel = new JPanel();
         hitBtn = new JButton("Hit");
         standBtn = new JButton("Stand");
         doubleBtn = new JButton("Double");
+        yesBtn = new JButton("Yes");
+        noBtn = new JButton("No");
+        continueBtn = new JButton("Continue");
         saveBtn = new JButton("Save & Quit");
         actionPanel.setOpaque(false);
         actionPanel.setLayout(new FlowLayout());
-        for (JButton button : new JButton[]{hitBtn, standBtn, doubleBtn, saveBtn}) {
+
+        for (JButton button : new JButton[]{hitBtn, standBtn, doubleBtn, yesBtn, noBtn, continueBtn, saveBtn}) {
             button.setOpaque(false);
             button.setFont(new Font("Avenir", Font.BOLD, 20));
             button.setForeground(Color.WHITE);
             button.addActionListener(this);
             actionPanel.add(button);
         }
+
+        yesBtn.setVisible(false);
+        noBtn.setVisible(false);
+        continueBtn.setVisible(false);
+
         gc.gridx = 0;
-        gc.gridy = 4;
+        gc.gridy = 5;
         image.add(actionPanel, gc);
     }
 
@@ -201,13 +219,15 @@ public class GameUI extends JFrame implements ActionListener {
                 + NumberFormat.getIntegerInstance().format(game.getPlayer().getBalance()), SwingConstants.LEFT);
         betMsg = new JLabel("    Current bet: $"
                 + NumberFormat.getIntegerInstance().format(game.getPlayer().getBet()), SwingConstants.LEFT);
+
         for (JLabel label : new JLabel[]{balanceMsg, betMsg}) {
             label.setFont(new Font("Avenir", Font.BOLD, 15));
             label.setForeground(Color.WHITE);
             infoPanel.add(label);
         }
+
         gc.gridx = 0;
-        gc.gridy = 5;
+        gc.gridy = 6;
         image.add(infoPanel, gc);
     }
 
@@ -235,14 +255,26 @@ public class GameUI extends JFrame implements ActionListener {
     //          "Hit" adds card to player's hand
     //          "Stand" ends player's turn and moves to dealer's turn
     //          "Double" doubles the player's current bet and takes a single card
+    //          "Yes" creates new game for player to continue playing
+    //          "No" closes the game menu and exits the program
+    //          "Continue" is a special button that prompts user to continue when they have a Blackjack in hand
     //          "Save & Quit" saves the current game, closes the game menu and exits the program
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == hitBtn) {
             playerHit();
         } else if (e.getSource() == standBtn) {
+            playerText.setText("You have a count of " + game.getHandInValue(game.getPlayerHand()) + ".");
             dealerTurn();
         } else if (e.getSource() == doubleBtn) {
             playerDouble();
+        } else if (e.getSource() == yesBtn) {
+            gameFrame.dispose();
+            new GameUI(game);
+        } else if (e.getSource() == noBtn) {
+            JOptionPane.showMessageDialog(gameFrame, "Thanks for playing, see you next time!");
+            System.exit(0);
+        } else if (e.getSource() == continueBtn) {
+            endGame();
         } else if (e.getSource() == saveBtn) {
             saveGame();
             System.exit(0);
@@ -261,6 +293,7 @@ public class GameUI extends JFrame implements ActionListener {
         image.add(playerPanel, gc);
         playerText.setText("You have a current count of " + game.getHandInValue(game.getPlayerHand())
                 + ". What would you like to do?");
+        doubleBtn.setVisible(false);
 
         image.revalidate();
         image.repaint();
@@ -268,23 +301,39 @@ public class GameUI extends JFrame implements ActionListener {
         playerDialog();
     }
 
-    // EFFECTS: displays a pop-out dialog that summarizes the result of the player's hit
+    // EFFECTS: displays text that summarizes the result of the player's hit
     public void playerDialog() {
         int last = game.getPlayerHand().size() - 1;
 
-        if (game.getHandInValue(game.getPlayerHand()) == 21) {
-            JOptionPane.showMessageDialog(gameFrame, "You have a total count of 21! \n"
-                    + game.determineWinner());
-            endGame();
+        if (game.checkBlackjack(game.getPlayerHand())) {
+            playerText.setText("abc");
+        } else if (game.getHandInValue(game.getPlayerHand()) == 21) {
+            playerText.setText("You have a total count of 21!");
+            dealerTurn();
         } else if (game.getHandInValue(game.getPlayerHand()) > 21) {
-            JOptionPane.showMessageDialog(gameFrame, "You hit a "
-                    + game.getPlayerHand().get(last).getCardString() + " for a total count of "
-                    + game.getHandInValue(game.getPlayerHand()) + " and have bust.\n" + game.determineWinner());
+            playerText.setText("You hit a " + game.getPlayerHand().get(last).getCardString() + " and have bust. \n");
             endGame();
         } else {
-            JOptionPane.showMessageDialog(gameFrame, "You hit a "
-                    + game.getPlayerHand().get(last).getCardString() + " for a total count of "
-                    + game.getHandInValue(game.getPlayerHand()) + ".");
+            playerText.setText("You hit a " + game.getPlayerHand().get(last).getCardString() + " for a total count of "
+                    + game.getHandInValue(game.getPlayerHand()) + ". What would you like to do?");
+            image.revalidate();
+            image.repaint();
+        }
+    }
+
+    // MODIFIES: this
+    // EFFECTS: changes action panel to only show continueBtn and saveBtn if player has Blackjack in hand;
+    //          otherwise displays current count of player's hand
+    public void playerBlackjack() {
+        if (game.checkBlackjack(game.getPlayerHand())) {
+            playerText.setText("Nice hand!");
+            hitBtn.setVisible(false);
+            standBtn.setVisible(false);
+            doubleBtn.setVisible(false);
+            continueBtn.setVisible(true);
+        } else {
+            playerText.setText("You have a current count of " + game.getHandInValue(game.getPlayerHand())
+                    + ". What would you like to do?");
         }
     }
 
@@ -325,22 +374,21 @@ public class GameUI extends JFrame implements ActionListener {
         dealerDialog(counter);
     }
 
-    // EFFECTS: displays a pop-out dialog that summarizes the result of the dealer's hit(s) as well as the result
+    // EFFECTS: displays text that summarizes the result of the dealer's hit(s) as well as the result
     //          of the round
     public void dealerDialog(int timesHit) {
-        if (timesHit == 0) {
-            JOptionPane.showMessageDialog(gameFrame, "Dealer stands with a total count of "
-                    + game.getHandInValue(game.getDealerHand()) + ". \n" + game.determineWinner());
+        if (game.checkBlackjack(game.getDealerHand())) {
+            dealerText.setText("Dealer has a Blackjack.");
+        } else if (timesHit == 0) {
+            dealerText.setText("Dealer stands with a total count of " + game.getHandInValue(game.getDealerHand())
+                    + ".");
         } else if (timesHit > 0 && game.checkBust(game.getDealerHand())) {
-            JOptionPane.showMessageDialog(gameFrame, "Dealer hits " + timesHit
-                    + " time(s) and gets a total count of " + game.getHandInValue(game.getDealerHand())
-                    + ". \nDealer busts, you win!");
+            dealerText.setText("Dealer hits " + timesHit + " time(s) and gets a total count of "
+                    + game.getHandInValue(game.getDealerHand()) + ".");
         } else {
-            JOptionPane.showMessageDialog(gameFrame, "Dealer hits " + timesHit
-                    + " time(s) and gets a total count of " + game.getHandInValue(game.getDealerHand()) + ". \n"
-                    + game.determineWinner());
+            dealerText.setText("Dealer hits " + timesHit + " time(s) and gets a total count of "
+                    + game.getHandInValue(game.getDealerHand()) + ".");
         }
-
         endGame();
     }
 
@@ -348,8 +396,6 @@ public class GameUI extends JFrame implements ActionListener {
     // EFFECTS: double's the player's current bet, adds one card to player's hand and displays it onto the game window
     public void playerDouble() {
         if (game.getPlayer().doubleDown()) {
-            JOptionPane.showMessageDialog(gameFrame, "Your bet is now $" + game.getPlayer().getBet()
-                    + ". Good luck!");
             game.hit(game.getPlayerHand());
             playerPanel.add(new JLabel(new ImageIcon(printCard(game.getPlayerHand().get(2)))));
             gc.gridx = 0;
@@ -360,17 +406,33 @@ public class GameUI extends JFrame implements ActionListener {
             betMsg.setText("    Current bet: $"
                     + NumberFormat.getIntegerInstance().format(game.getPlayer().getBet()));
 
-            image.revalidate();
-            image.repaint();
-
-            playerDialog();
-            dealerTurn();
+            doubleDialog();
 
         } else {
             JOptionPane.showMessageDialog(gameFrame, "You have an insufficient balance. Please try again.");
             doubleBtn.setVisible(false);
-            image.revalidate();
-            image.repaint();
+        }
+
+        image.revalidate();
+        image.repaint();
+    }
+
+    // EFFECTS: displays text that summarizes the result of the player's double and moves onto the dealer's turn
+    public void doubleDialog() {
+        int last = game.getPlayerHand().size() - 1;
+        String newBet = "Your bet is now $" + game.getPlayer().getBet() + ".\n";
+
+        if (game.getHandInValue(game.getPlayerHand()) == 21) {
+            playerText.setText(newBet + "You have a total count of 21!");
+            dealerTurn();
+        } else if (game.getHandInValue(game.getPlayerHand()) > 21) {
+            playerText.setText(newBet + " You hit a " + game.getPlayerHand().get(last).getCardString()
+                    + " and have bust.");
+            endGame();
+        } else {
+            playerText.setText(newBet + "You hit a " + game.getPlayerHand().get(last).getCardString()
+                    + " for a total count of " + game.getHandInValue(game.getPlayerHand()) + ".");
+            dealerTurn();
         }
     }
 
@@ -394,51 +456,58 @@ public class GameUI extends JFrame implements ActionListener {
     // EFFECTS: updates player's balance accordingly, clears both player and dealer's hands
     public void endGame() {
         game.updatePlayerBalance();
+        playAgain();
         game.clearHand();
         game.getPlayer().setBet(0);
 
         if (game.getPlayer().getBalance() <= 0) {
             JOptionPane.showMessageDialog(gameFrame, "Your balance is now $0. \n"
-                    + "Please reload the game to replenish your balance. \nBetter luck next time!",
+                            + "Please reload the game to replenish your balance. \nBetter luck next time!",
                     "No More Money", JOptionPane.WARNING_MESSAGE);
             System.exit(0);
-        } else {
-            playAgain();
         }
     }
 
-    // bettingChips image taken from: https://shutr.bz/3qdojxs
     // MODIFIES: this
-    // EFFECTS: prompts user to select from 3 options:
+    // EFFECTS: hides game-related action buttons and shows new action buttons with 3 options:
     //          "Yes" starts a new round of Blackjack;
     //          "No" closes the application;
     //          "Save & Quit" saves the current balance to file and then closes the application
     public void playAgain() {
-        String [] options = {"Save & Quit", "No", "Yes"};
-        int selected;
+        hitBtn.setVisible(false);
+        standBtn.setVisible(false);
+        doubleBtn.setVisible(false);
+        yesBtn.setVisible(true);
+        noBtn.setVisible(true);
+        continueBtn.setVisible(false);
+        balanceMsg.setVisible(false);
+        betMsg.setVisible(false);
 
-        ImageIcon chips = new ImageIcon("./images/bettingChips.png");
+        againText();
 
-        do {
-            selected = JOptionPane.showOptionDialog(gameFrame,
-                    "Your new balance is $"
-                            + NumberFormat.getIntegerInstance().format(game.getPlayer().getBalance())
-                            + ".\nWould you like to play again? \nPlease select one of the following:",
-                    "Play Again?", JOptionPane.DEFAULT_OPTION,JOptionPane.QUESTION_MESSAGE, chips,
-                    options, options[2]);
-        } while (selected == JOptionPane.CLOSED_OPTION);
+        image.revalidate();
+        image.repaint();
+    }
 
-        switch (selected) {
-            case 2:
-                gameFrame.dispose();
-                new GameUI(game);
-                break;
-            case 1:
-                JOptionPane.showMessageDialog(gameFrame, "Thanks for playing, see you next time!");
-                System.exit(0);
-            case 0:
-                saveGame();
-                System.exit(0);
-        }
+    // MODIFIES: this
+    // EFFECTS: displays text of new balance and asks whether player would like to play again
+    public void againText() {
+        againText = new JTextPane();
+        againText.setFont(new Font("Avenir", Font.BOLD, 20));
+        againText.setOpaque(false);
+        againText.setEditable(false);
+        againText.setFocusable(false);
+        againText.setForeground(Color.WHITE);
+        againText.setText(game.determineWinner() + "\nYour new balance is $"
+                + NumberFormat.getIntegerInstance().format(game.getPlayer().getBalance())
+                + ". Would you like to play again?");
+        StyledDocument doc = againText.getStyledDocument();
+        SimpleAttributeSet center = new SimpleAttributeSet();
+        StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER);
+        doc.setParagraphAttributes(0, doc.getLength(), center, false);
+
+        gc.gridx = 0;
+        gc.gridy = 4;
+        image.add(againText, gc);
     }
 }

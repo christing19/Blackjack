@@ -96,6 +96,7 @@ public class BlackjackUI extends JFrame implements ActionListener {
     public void loadBlackjackGame() {
         try {
             game = jsonReader.read();
+            JOptionPane.showMessageDialog(mainFrame, "Successfully loaded previously saved game.");
             mainFrame.dispose();
             new GameUI(game);
         } catch (IOException e) {

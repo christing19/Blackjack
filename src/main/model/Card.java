@@ -70,17 +70,15 @@ public class Card {
     // EFFECTS: returns suit of card as a pre-assigned integer value;
     //          Clubs = 1, Diamonds = 2, Hearts = 3, Spades = 4;
     public int getCardSuitNum() {
-        switch (cardSuit) {
-            case "Clubs":
-                return 1;
-            case "Diamonds":
-                return 2;
-            case "Hearts":
-                return 3;
-            case "Spades":
-                return 4;
+        if (cardSuit.equals("Clubs")) {
+            return 1;
+        } else if (cardSuit.equals("Diamonds")) {
+            return 2;
+        } else if (cardSuit.equals("Hearts")) {
+            return 3;
+        } else {
+            return 4;
         }
-        return 0;
     }
 }
 
