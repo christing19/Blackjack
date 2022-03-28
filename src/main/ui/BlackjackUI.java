@@ -1,6 +1,8 @@
 package ui;
 
 import model.BlackjackGame;
+import model.Event;
+import model.EventLog;
 import persistence.JsonReader;
 
 import javax.swing.*;

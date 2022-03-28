@@ -1,36 +1,36 @@
 {
-    "Player Bet": 7,
-    "Player Balance": 1000,
+    "Player Bet": 5,
+    "Player Balance": 995,
     "Player Hand": [
         {
-            "cardSuitNum": 1,
-            "cardString": "A of Clubs",
-            "cardSuit": "Clubs",
-            "cardValue": 11,
-            "cardRank": 1
+            "cardSuitNum": 2,
+            "cardString": "3 of Diamonds",
+            "cardSuit": "Diamonds",
+            "cardValue": 3,
+            "cardRank": 3
         },
         {
-            "cardSuitNum": 1,
-            "cardString": "J of Clubs",
-            "cardSuit": "Clubs",
+            "cardSuitNum": 2,
+            "cardString": "Q of Diamonds",
+            "cardSuit": "Diamonds",
             "cardValue": 10,
-            "cardRank": 11
+            "cardRank": 12
         }
     ],
     "Dealer Hand": [
         {
-            "cardSuitNum": 1,
-            "cardString": "A of Clubs",
-            "cardSuit": "Clubs",
-            "cardValue": 11,
-            "cardRank": 1
+            "cardSuitNum": 2,
+            "cardString": "Q of Diamonds",
+            "cardSuit": "Diamonds",
+            "cardValue": 10,
+            "cardRank": 12
         },
         {
-            "cardSuitNum": 1,
-            "cardString": "A of Clubs",
-            "cardSuit": "Clubs",
-            "cardValue": 11,
-            "cardRank": 1
+            "cardSuitNum": 2,
+            "cardString": "4 of Diamonds",
+            "cardSuit": "Diamonds",
+            "cardValue": 4,
+            "cardRank": 4
         }
     ]
 }

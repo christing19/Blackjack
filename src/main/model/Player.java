@@ -15,7 +15,7 @@ public class Player {
     }
 
     // MODIFIES: this
-    // EFFECTS: applies given amount as current bet for current round of play
+    // EFFECTS: applies given amount as current bet for current round of play and adds bet to event log
     //          throws IllegalBetException if given amount is < 0 or > current balance
     public void makeBet(int amount) throws IllegalBetException {
         if (amount < 0 || amount > balance) {
@@ -24,15 +24,22 @@ public class Player {
 
         bet = amount;
         balance -= bet;
+
+        EventLog.getInstance().logEvent(new Event("Player makes a bet of $" + getBet()
+                + " to start the round"));
     }
 
     // REQUIRES: bet <= balance
     // MODIFIES: this
     // EFFECTS: doubles player's current bet for the round by applying amount equivalent to player's original bet
+    //          and adds double down to event log
     public boolean doubleDown() {
         if (balance >= bet) {
             balance -= bet;
             bet += bet;
+
+            EventLog.getInstance().logEvent(new Event("Player doubles down for a total bet of $" + getBet()
+                    + " for this round"));
             return true;
         } else {
             return false;

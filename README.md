@@ -53,3 +53,29 @@ I created this project because I am genuinely fascinated by this game and believ
 **Phase 2**
 - As a user, I want to be able to save the current round of Blackjack to file (similar to "holding" a seat at a casino).
 - As a user, when I start the application, I want to be given the option to load the saved round of Blackjack or start a new round.
+
+### **Phase 4, Task 2**
+Sample event log:
+Mon Mar 28 00:44:02 PDT 2022
+Player makes a bet of $5 to start the round.
+
+Mon Mar 28 00:44:02 PDT 2022
+Player starts with a 9 of Clubs and a 9 of Diamonds for a count of 18.
+
+Mon Mar 28 00:44:02 PDT 2022
+Dealer starts with a 3 of Hearts and a 7 of Clubs for a count of 10.
+
+Mon Mar 28 00:44:08 PDT 2022
+Player stands on a count of 18.
+
+Mon Mar 28 00:44:08 PDT 2022
+Dealer hits a 5 of Clubs for a count of 15.
+
+Mon Mar 28 00:44:08 PDT 2022
+Dealer hits a Q of Spades for a count of 25.
+
+Mon Mar 28 00:44:08 PDT 2022
+Dealer busts on a count of 25.
+
+Mon Mar 28 00:44:08 PDT 2022
+Both hands cleared to begin a new round.

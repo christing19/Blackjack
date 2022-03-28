@@ -25,23 +25,26 @@ public class BlackjackGame implements Writable {
 
     // MODIFIES: this
     // EFFECTS: starts the game by generating two random cards for player and dealer and adding the cards
-    //          to their respective hands
+    //          to their respective hands; adds starting hands to event log
     public void startGame() {
         Random randRank = new Random();
         Random randSuit = new Random();
-        int randIndex = randSuit.nextInt(suits.size());
 
-        Card playerCard1 = new Card(randRank.nextInt(13) + 1, suits.get(randIndex));
-        Card playerCard2 = new Card(randRank.nextInt(13) + 1, suits.get(randIndex));
+        Card playerCard1 = new Card(randRank.nextInt(13) + 1, suits.get(randSuit.nextInt(suits.size())));
+        Card playerCard2 = new Card(randRank.nextInt(13) + 1, suits.get(randSuit.nextInt(suits.size())));
 
         playerHand.add(playerCard1);
         playerHand.add(playerCard2);
+        EventLog.getInstance().logEvent(new Event("Player starts with a " + playerHand.get(0).getCardString()
+                + " and a " + playerHand.get(1).getCardString() + " for a count of " + getHandInValue(playerHand)));
 
-        Card dealerCard1 = new Card(randRank.nextInt(13) + 1, suits.get(randIndex));
-        Card dealerCard2 = new Card(randRank.nextInt(13) + 1, suits.get(randIndex));
+        Card dealerCard1 = new Card(randRank.nextInt(13) + 1, suits.get(randSuit.nextInt(suits.size())));
+        Card dealerCard2 = new Card(randRank.nextInt(13) + 1, suits.get(randSuit.nextInt(suits.size())));
 
         dealerHand.add(dealerCard1);
         dealerHand.add(dealerCard2);
+        EventLog.getInstance().logEvent(new Event("Dealer starts with a " + dealerHand.get(0).getCardString()
+                + " and a " + dealerHand.get(1).getCardString() + " for a count of " + getHandInValue(dealerHand)));
     }
 
     // REQUIRES: hand is a non-empty list
@@ -96,15 +99,27 @@ public class BlackjackGame implements Writable {
 
     // REQUIRES: hand is a non-empty list
     // MODIFIES: this
-    // EFFECTS: adds a new card to the current hand
+    // EFFECTS: adds a new card to the current hand, adds hit to event log
     public void hit(ArrayList<Card> hand) {
         Random randRank = new Random();
         Random randSuit = new Random();
         int randIndex = randSuit.nextInt(suits.size());
 
         Card hitCard = new Card(randRank.nextInt(13) + 1, suits.get(randIndex));
-
         hand.add(hitCard);
+
+        String person;
+        if (hand == dealerHand) {
+            person = "Dealer";
+            if (dealerHand.size() <= 3) {
+                EventLog.getInstance().logEvent(new Event("Player stands on a count of "
+                        + getHandInValue(playerHand)));
+            }
+        } else {
+            person = "Player";
+        }
+        EventLog.getInstance().logEvent(new Event(person + " hits a " + hitCard.getCardString()
+                + " for a count of " + getHandInValue(hand)));
     }
 
     // EFFECTS: compares total value in player's hand vs. dealer's hand;
@@ -130,10 +145,19 @@ public class BlackjackGame implements Writable {
     }
 
     // MODIFIES: this
-    // EFFECTS: updates player balance based on result of the round;
+    // EFFECTS: adds round result to event log and updates player balance based on result of the round;
     //          if player has won, rewards player by amount equivalent to bet;
     //          also rewards player with 3:2 of bet if player wins with a Blackjack
     public void updatePlayerBalance() {
+        String result;
+        if (checkBust(dealerHand)) {
+            result = "busts";
+        } else {
+            result = "stands";
+        }
+        EventLog.getInstance().logEvent(new Event("Dealer " + result + " on a count of "
+                + getHandInValue(dealerHand)));
+
         if (determineWinner().equals("You have a Blackjack!")) {
             player.addBalance(player.getBet() * 5 / 2);
         } else if (determineWinner().equals("You win!")) {
@@ -144,10 +168,11 @@ public class BlackjackGame implements Writable {
     }
 
     // MODIFIES: this
-    // EFFECTS: clears player's and dealer's hand of existing cards to prepare for new round
+    // EFFECTS: clears player's and dealer's hand of existing cards to prepare for new round, adds action to event log
     public void clearHand() {
         playerHand.clear();
         dealerHand.clear();
+        EventLog.getInstance().logEvent(new Event("Both hands cleared to begin a new round"));
     }
 
     // MODIFIES: this

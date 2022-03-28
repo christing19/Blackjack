@@ -3,6 +3,8 @@ package ui;
 import exceptions.IllegalBetException;
 import model.BlackjackGame;
 import model.Card;
+import model.Event;
+import model.EventLog;
 import persistence.JsonWriter;
 
 import javax.imageio.ImageIO;
@@ -77,8 +79,8 @@ public class GameUI extends JFrame implements ActionListener {
     // EFFECTS: initializes various game panels, including dealer / player hands and action / info panels
     public void initializeGameUI() {
         if (game.getPlayerHand().isEmpty()) {
-            game.startGame();
             initializeBetPopOut();
+            game.startGame();
         } else {
             JOptionPane.showMessageDialog(gameFrame, "Your balance is $"
                     + NumberFormat.getIntegerInstance().format(game.getPlayer().getBalance())
@@ -256,7 +258,7 @@ public class GameUI extends JFrame implements ActionListener {
     //          "Stand" ends player's turn and moves to dealer's turn
     //          "Double" doubles the player's current bet and takes a single card
     //          "Yes" creates new game for player to continue playing
-    //          "No" closes the game menu and exits the program
+    //          "No" closes the game menu and exits the program, prints event log to console
     //          "Continue" is a special button that prompts user to continue when they have a Blackjack in hand
     //          "Save & Quit" saves the current game, closes the game menu and exits the program
     public void actionPerformed(ActionEvent e) {
@@ -272,6 +274,7 @@ public class GameUI extends JFrame implements ActionListener {
             new GameUI(game);
         } else if (e.getSource() == noBtn) {
             JOptionPane.showMessageDialog(gameFrame, "Thanks for playing, see you next time!");
+            printLog(EventLog.getInstance());
             System.exit(0);
         } else if (e.getSource() == continueBtn) {
             endGame();
@@ -464,6 +467,7 @@ public class GameUI extends JFrame implements ActionListener {
             JOptionPane.showMessageDialog(gameFrame, "Your balance is now $0. \n"
                             + "Please reload the game to replenish your balance. \nBetter luck next time!",
                     "No More Money", JOptionPane.WARNING_MESSAGE);
+            printLog(EventLog.getInstance());
             System.exit(0);
         }
     }
@@ -509,5 +513,12 @@ public class GameUI extends JFrame implements ActionListener {
         gc.gridx = 0;
         gc.gridy = 4;
         image.add(againText, gc);
+    }
+
+    // EFFECTS: prints out event log of actions completed during game
+    public void printLog(EventLog el) {
+        for (Event next : el) {
+            System.out.println(next.toString() + ".\n");
+        }
     }
 }
