@@ -57,9 +57,6 @@ I created this project because I am genuinely fascinated by this game and believ
 ### **Phase 4, Task 2**
 Sample event log:
 Mon Mar 28 00:44:02 PDT 2022
-Player makes a bet of $5 to start the round.
-
-Mon Mar 28 00:44:02 PDT 2022
 Player starts with a 9 of Clubs and a 9 of Diamonds for a count of 18.
 
 Mon Mar 28 00:44:02 PDT 2022
