@@ -1,8 +1,6 @@
 package ui;
 
 import model.BlackjackGame;
-import model.Event;
-import model.EventLog;
 import persistence.JsonReader;
 
 import javax.swing.*;
@@ -20,9 +18,9 @@ public class BlackjackUI extends JFrame implements ActionListener {
 
     private BlackjackGame game;
     private JsonReader jsonReader;
+    private ImagePanel image;
 
     private JFrame mainFrame;
-    private ImagePanel image;
     private JButton playBtn;
     private JButton loadBtn;
     private JButton quitBtn;
@@ -34,7 +32,6 @@ public class BlackjackUI extends JFrame implements ActionListener {
     public BlackjackUI() {
         game = new BlackjackGame();
         jsonReader = new JsonReader(JSON_LOCATION);
-
         image = new ImagePanel(new ImageIcon("./images/menuBackground.jpg").getImage());
 
         mainFrame = new JFrame("Blackjack Game Simulator");
@@ -132,10 +129,5 @@ public class BlackjackUI extends JFrame implements ActionListener {
         int width = Toolkit.getDefaultToolkit().getScreenSize().width;
         int height = Toolkit.getDefaultToolkit().getScreenSize().height;
         setLocation((width - getWidth()) / 2, (height - getHeight()) / 2);
-    }
-
-    // EFFECTS: starts a new main menu and runs the application
-    public static void main(String[] args) {
-        new BlackjackUI();
     }
 }

@@ -145,7 +145,7 @@ public class BlackjackGame implements Writable {
     }
 
     // MODIFIES: this
-    // EFFECTS: adds round result to event log and updates player balance based on result of the round;
+    // EFFECTS: adds dealer's result to event log and updates player balance based on result of the round;
     //          if player has won, rewards player by amount equivalent to bet;
     //          also rewards player with 3:2 of bet if player wins with a Blackjack
     public void updatePlayerBalance() {

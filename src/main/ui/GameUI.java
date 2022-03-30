@@ -25,10 +25,16 @@ import java.text.NumberFormat;
 public class GameUI extends JFrame implements ActionListener {
 
     private BlackjackGame game;
-    private JFrame gameFrame;
+    private JsonWriter jsonWriter;
     private ImagePanel image;
-    private JLabel faceDownCard;
+
+    private JFrame gameFrame;
     private GridBagConstraints gc;
+
+    private JPanel dealerPanel;
+    private JPanel playerPanel;
+    private JPanel actionPanel;
+    private JPanel infoPanel;
 
     private JButton hitBtn;
     private JButton standBtn;
@@ -38,19 +44,12 @@ public class GameUI extends JFrame implements ActionListener {
     private JButton saveBtn;
     private JButton continueBtn;
 
-    private JPanel dealerPanel;
-    private JPanel playerPanel;
-
+    private JLabel faceDownCard;
     private JLabel dealerText;
     private JTextPane playerText;
     private JTextPane againText;
-
     private JLabel balanceMsg;
     private JLabel betMsg;
-
-    private JPanel actionPanel;
-    private JPanel infoPanel;
-    private JsonWriter jsonWriter;
 
     // Sections of this method are adapted from:
     // https://github.students.cs.ubc.ca/CPSC210/AlarmSystem

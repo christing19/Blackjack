@@ -79,3 +79,8 @@ Dealer busts on a count of 25.
 
 Mon Mar 28 00:44:08 PDT 2022
 Both hands cleared to begin a new round.
+
+### **Phase 4, Task 3**
+- The Player class could be changed so that there is an abstract User class, and both Player and a new Dealer class would extend the User class so that the hierarchy / structure is cleaner. There would be a lot of duplicate code in Player and Dealer that could be abstracted and even implemented in the User class.
+- Building on the previous point, Card could have an aggregation relationship with the abstract User class as a Card could be interpreted to be "part of" a User.
+- Making all methods robust via incorporating exceptions; the bet input was made robust but there could be other methods that could be made more robust, such as ensuring that a hand is a non-empty list before doing any actions on it. That way there would also not be any "requires" clauses in the method specifications.

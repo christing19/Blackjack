@@ -25,8 +25,8 @@ public class Player {
         bet = amount;
         balance -= bet;
 
-        EventLog.getInstance().logEvent(new Event("Player makes a bet of $" + getBet()
-                + " to start the round"));
+//        EventLog.getInstance().logEvent(new Event("Player makes a bet of $" + getBet()
+//                + " to start the round"));
     }
 
     // REQUIRES: bet <= balance
@@ -38,8 +38,8 @@ public class Player {
             balance -= bet;
             bet += bet;
 
-            EventLog.getInstance().logEvent(new Event("Player doubles down for a total bet of $" + getBet()
-                    + " for this round"));
+//            EventLog.getInstance().logEvent(new Event("Player doubles down for a total bet of $" + getBet()
+//                    + " for this round"));
             return true;
         } else {
             return false;

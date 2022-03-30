@@ -3,34 +3,34 @@
     "Player Balance": 995,
     "Player Hand": [
         {
-            "cardSuitNum": 2,
-            "cardString": "3 of Diamonds",
-            "cardSuit": "Diamonds",
-            "cardValue": 3,
-            "cardRank": 3
+            "cardSuitNum": 3,
+            "cardString": "2 of Hearts",
+            "cardValue": 2,
+            "cardSuit": "Hearts",
+            "cardRank": 2
         },
         {
-            "cardSuitNum": 2,
-            "cardString": "Q of Diamonds",
-            "cardSuit": "Diamonds",
-            "cardValue": 10,
-            "cardRank": 12
+            "cardSuitNum": 3,
+            "cardString": "9 of Hearts",
+            "cardValue": 9,
+            "cardSuit": "Hearts",
+            "cardRank": 9
         }
     ],
     "Dealer Hand": [
         {
-            "cardSuitNum": 2,
-            "cardString": "Q of Diamonds",
-            "cardSuit": "Diamonds",
-            "cardValue": 10,
-            "cardRank": 12
+            "cardSuitNum": 3,
+            "cardString": "8 of Hearts",
+            "cardValue": 8,
+            "cardSuit": "Hearts",
+            "cardRank": 8
         },
         {
             "cardSuitNum": 2,
-            "cardString": "4 of Diamonds",
+            "cardString": "Q of Diamonds",
+            "cardValue": 10,
             "cardSuit": "Diamonds",
-            "cardValue": 4,
-            "cardRank": 4
+            "cardRank": 12
         }
     ]
 }
