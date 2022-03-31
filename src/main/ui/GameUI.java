@@ -69,7 +69,14 @@ public class GameUI extends JFrame implements ActionListener {
         gameFrame.setSize(BlackjackUI.WIDTH, BlackjackUI.HEIGHT);
         gameFrame.setLocationRelativeTo(null);
         gameFrame.setResizable(false);
-        gameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        gameFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        gameFrame.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+                printLog(EventLog.getInstance());
+                System.exit(0);
+            }
+        });
 
         initializeGameUI();
     }
@@ -279,6 +286,7 @@ public class GameUI extends JFrame implements ActionListener {
             endGame();
         } else if (e.getSource() == saveBtn) {
             saveGame();
+            printLog(EventLog.getInstance());
             System.exit(0);
         }
     }

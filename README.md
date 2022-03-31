@@ -56,25 +56,28 @@ I created this project because I am genuinely fascinated by this game and believ
 
 ### **Phase 4, Task 2**
 Sample event log:
-Mon Mar 28 00:44:02 PDT 2022
-Player starts with a 9 of Clubs and a 9 of Diamonds for a count of 18.
+Wed Mar 30 19:58:40 PDT 2022
+Player starts with a J of Diamonds and a 3 of Clubs for a count of 13.
 
-Mon Mar 28 00:44:02 PDT 2022
-Dealer starts with a 3 of Hearts and a 7 of Clubs for a count of 10.
+Wed Mar 30 19:58:40 PDT 2022
+Dealer starts with a A of Hearts and a 4 of Spades for a count of 15.
 
-Mon Mar 28 00:44:08 PDT 2022
-Player stands on a count of 18.
+Wed Mar 30 19:58:42 PDT 2022
+Player hits a 6 of Spades for a count of 19.
 
-Mon Mar 28 00:44:08 PDT 2022
-Dealer hits a 5 of Clubs for a count of 15.
+Wed Mar 30 19:58:43 PDT 2022
+Player stands on a count of 19.
 
-Mon Mar 28 00:44:08 PDT 2022
-Dealer hits a Q of Spades for a count of 25.
+Wed Mar 30 19:58:43 PDT 2022
+Dealer hits a J of Hearts for a count of 15.
 
-Mon Mar 28 00:44:08 PDT 2022
+Wed Mar 30 19:58:43 PDT 2022
+Dealer hits a Q of Hearts for a count of 25.
+
+Wed Mar 30 19:58:43 PDT 2022
 Dealer busts on a count of 25.
 
-Mon Mar 28 00:44:08 PDT 2022
+Wed Mar 30 19:58:43 PDT 2022
 Both hands cleared to begin a new round.
 
 ### **Phase 4, Task 3**
