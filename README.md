@@ -7,6 +7,10 @@
 >To get a higher total in the numbered value of the cards in your hand than the dealer, 
 without going over a count of 21.
 
+### **Target Audience:**
+- Anyone who would like to learn about one of the most popular casino card games in the world
+- This is also a good training ground for gameplay before heading out to the casino and gambling with real dollars!
+
 ### **How to Play:**
 
 - A player will interact with the program by first making a bet with their available amount of betting chips. Minimum bet starts at $1.
@@ -35,52 +39,9 @@ without going over a count of 21.
 - Dealer stands on a count of within the range of 17 to 21.
 - Dealer stands on soft 17.
 
-### **Target Audience:**
-- Anyone who would like to learn about one of the most popular casino card games in the world
-- This is also a good training ground for gameplay before heading out to the casino and gambling with real dollars!
+
 
 ### **Rationale for Project:**
-I created this project because I am genuinely fascinated by this game and believe that this is one of the few casino games out there that requires knowledge of probability and logic. There is a well-documented "Basic Strategy" that has been developed over the years based on card probabilities. If a player were to follow closely to this strategy, they could significantly reduce the house edge to 0.5% (vs. ~5% in roulette, for example), making it one of the fairest casino games in existence. 
+I created this project because I am genuinely fascinated by this game and believe that this is one of the few casino games out there that requires knowledge of probability and logic. There is a well-documented "Basic Strategy" that has been developed over the years based on card probabilities. If a player were to follow closely to this strategy, they could significantly reduce the house edge to 0.5% (vs. ~5% in roulette, for example), making it one of the fairest casino games in existence.
 
-### **User Stories**
-**Phase 1**
-- As a user, I want to be able to make the decision to hit (i.e. draw additional cards / adding X to Y) or stand (i.e. do not draw any more cards).
-- As a user, I want to be able to view my balance after the current round is complete.
-- As a user, I want to be able to play a new round after the current round is complete.
-- As a user, I want to be able to change my bets each round (i.e. bets for each round of play is independent).
-- As a user, I want to be able to double down on my bets on hands where I believe I have a strong chance of beating the dealer.
 
-**Phase 2**
-- As a user, I want to be able to save the current round of Blackjack to file (similar to "holding" a seat at a casino).
-- As a user, when I start the application, I want to be given the option to load the saved round of Blackjack or start a new round.
-
-### **Phase 4, Task 2**
-Sample event log:
-Wed Mar 30 19:58:40 PDT 2022
-Player starts with a J of Diamonds and a 3 of Clubs for a count of 13.
-
-Wed Mar 30 19:58:40 PDT 2022
-Dealer starts with a A of Hearts and a 4 of Spades for a count of 15.
-
-Wed Mar 30 19:58:42 PDT 2022
-Player hits a 6 of Spades for a count of 19.
-
-Wed Mar 30 19:58:43 PDT 2022
-Player stands on a count of 19.
-
-Wed Mar 30 19:58:43 PDT 2022
-Dealer hits a J of Hearts for a count of 15.
-
-Wed Mar 30 19:58:43 PDT 2022
-Dealer hits a Q of Hearts for a count of 25.
-
-Wed Mar 30 19:58:43 PDT 2022
-Dealer busts on a count of 25.
-
-Wed Mar 30 19:58:43 PDT 2022
-Both hands cleared to begin a new round.
-
-### **Phase 4, Task 3**
-- The Player class could be changed so that there is an abstract User class, and both Player and a new Dealer class would extend the User class so that the hierarchy / structure is cleaner. There would be a lot of duplicate code in Player and Dealer that could be abstracted and even implemented in the User class.
-- Building on the previous point, Card could have an aggregation relationship with the abstract User class as a Card could be interpreted to be "part of" a User.
-- Making all methods robust via incorporating exceptions; the bet input was made robust but there could be other methods that could be made more robust, such as ensuring that a hand is a non-empty list before doing any actions on it. That way there would also not be any "requires" clauses in the method specifications.
